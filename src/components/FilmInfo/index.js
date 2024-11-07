@@ -6,31 +6,30 @@ import { loadNewFilmsRandom } from '../../utils/core';
 import ListCard from '../ListCard';
 
 function FilmInfo({ data }) {
-    const initialEpisodeEmbed = data.episodes && data.episodes[0] && data.episodes[0].items[0]?.embed;
-    const initialEpisodeName = data.episodes && data.episodes[0] && data.episodes[0].items[0]?.name;
-    const [selectedEpisode, setSelectedEpisode] = useState(initialEpisodeEmbed || '');
-    const [selectedEpisodeName, setSelectedEpisodeName] = useState(initialEpisodeName || '');
-
     const navigate = useNavigate();
+    const [selectedEpisode, setSelectedEpisode] = useState('');
+    const [selectedEpisodeName, setSelectedEpisodeName] = useState('');
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
-     }, []);
+    }, []);
 
+    // Lấy trạng thái đã lưu từ localStorage
     useEffect(() => {
-        if (initialEpisodeEmbed) {
-            setSelectedEpisode(initialEpisodeEmbed);
-        }
-        if (initialEpisodeName) {
-            setSelectedEpisodeName(initialEpisodeName);
-        }
-    }, [initialEpisodeEmbed, initialEpisodeName]);
+        const savedEpisode = localStorage.getItem('selectedEpisode');
+        const savedEpisodeName = localStorage.getItem('selectedEpisodeName');
+        if (savedEpisode) setSelectedEpisode(savedEpisode);
+        if (savedEpisodeName) setSelectedEpisodeName(savedEpisodeName);
+    }, []);
 
     const handleEpisodeClick = (embedUrl, name) => {
         setSelectedEpisode(embedUrl);
-        setSelectedEpisodeName(name)
+        setSelectedEpisodeName(name);
+        // Lưu trạng thái vào localStorage
+        localStorage.setItem('selectedEpisode', embedUrl);
+        localStorage.setItem('selectedEpisodeName', name);
     };
 
     const loadMoreFilms = (slug) => {
@@ -50,16 +49,19 @@ function FilmInfo({ data }) {
                     frameBorder="0"
                     allowFullScreen
                 ></iframe>
-
-                <h4 className='text-white mb-4'>{data.name} - Tập {selectedEpisodeName}</h4>
+                <h4 className="text-white mb-4">
+                    {data.name} - Tập {selectedEpisodeName}
+                </h4>
             </div>
             <div className="danhsach_tap">
                 {data.episodes.map((server, index) => (
                     <div key={index} className="server-section">
-                        <h5 className='text-white'>{server.server_name}</h5>
+                        <h5 className="text-white">{server.server_name}</h5>
                         {server.items.map((episode) => (
                             <button
                                 key={episode.name}
+                                data-video={episode.embed}
+                                className={selectedEpisodeName === episode.name ? 'active' : ''}
                                 onClick={() => handleEpisodeClick(episode.embed, episode.name)}
                             >
                                 {episode.name}
@@ -88,8 +90,8 @@ function FilmInfo({ data }) {
                 </div>
             </div>
             <div>
-                {loading&&(<p className='text-center'>Đang tải...</p>)}
-                <ListCard title={'Phim Gợi Ý'} data={randomFilms} onMore={()=>loadMoreFilms('phim-dang-chieu')} />
+                {loading && <p className="text-center">Đang tải...</p>}
+                <ListCard title={'Phim Gợi Ý'} data={randomFilms} onMore={() => loadMoreFilms('phim-dang-chieu')} />
             </div>
         </>
     );
