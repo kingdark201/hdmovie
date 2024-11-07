@@ -8,8 +8,12 @@ function CardFilm({ film }) {
 
    const { current_episode, total_episodes, name, original_name, thumb_url, slug } = film;
 
+   const handleClick = () => {
+      navigate(`/${ROUTERS.USER.PHIM(slug)}`);
+   }
+
    return (
-      <div className='card-film' onClick={()=>navigate(`/${ROUTERS.USER.PHIM(slug)}`)}>
+      <div className='card-film' onClick={handleClick}>
          <div className='episodes_language'>
             {`${current_episode || 0}/${total_episodes || '?'}`}
          </div>

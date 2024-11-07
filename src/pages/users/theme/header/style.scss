@@ -4,8 +4,12 @@
     align-items: center;
     background-color: #0d0731f3;
     padding: 0 90px;
+    width: 100%;
     color: #fff;
     font-family: Arial, sans-serif;
+    position: fixed;
+    top: 0;
+    z-index: 100;
 
     .header-logo {
         font-size: 1.5rem;

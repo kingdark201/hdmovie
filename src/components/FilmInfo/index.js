@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './style.scss';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTERS } from '../../utils/router';
 import { loadNewFilmsRandom } from '../../utils/core';
 import ListCard from '../ListCard';
@@ -13,20 +13,43 @@ function FilmInfo({ data }) {
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const location = useLocation();
+    const pathname = location.pathname;
+    const slug = pathname.split('/').pop();
+
+    // Load phim ngẫu nhiên
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
     }, []);
 
-    // Lấy trạng thái đã lưu từ localStorage
+    // Khôi phục trạng thái từ localStorage khi slug hoặc data thay đổi
     useEffect(() => {
+        const savedFilmSlug = localStorage.getItem('currentFilmSlug');
         const savedEpisode = localStorage.getItem('selectedEpisode');
         const savedEpisodeName = localStorage.getItem('selectedEpisodeName');
         const savedServer = localStorage.getItem('selectedServer');
-        if (savedEpisode) setSelectedEpisode(savedEpisode);
-        if (savedEpisodeName) setSelectedEpisodeName(savedEpisodeName);
-        if (savedServer) setSelectedServer(savedServer);
-    }, []);
 
+        if (savedFilmSlug === slug) {
+            // Khôi phục trạng thái nếu slug khớp
+            setSelectedEpisode(savedEpisode || '');
+            setSelectedEpisodeName(savedEpisodeName || '');
+            setSelectedServer(savedServer || '');
+        } else {
+            // Reset trạng thái nếu slug không khớp
+            setSelectedEpisode('');
+            setSelectedEpisodeName('');
+            setSelectedServer('');
+            // Lưu thông tin phim mới vào localStorage
+            localStorage.setItem('currentFilmSlug', slug);
+
+            //Xóa localStorage phim cũ
+            localStorage.removeItem('selectedEpisode');
+            localStorage.removeItem('selectedEpisodeName');
+            localStorage.removeItem('selectedServer');
+        }
+    }, [slug]);
+
+    // Cập nhật trạng thái và lưu vào localStorage khi click tập phim
     const handleEpisodeClick = (embedUrl, name, serverName) => {
         setSelectedEpisode(embedUrl);
         setSelectedEpisodeName(name);
@@ -34,13 +57,14 @@ function FilmInfo({ data }) {
         localStorage.setItem('selectedEpisode', embedUrl);
         localStorage.setItem('selectedEpisodeName', name);
         localStorage.setItem('selectedServer', serverName);
+        localStorage.setItem('currentFilmSlug', slug);
     };
 
     const loadMoreFilms = (slug) => {
         navigate(`/${ROUTERS.USER.PHIMDM(slug)}`);
     };
 
-    if (!data.episodes) return <p>No episodes available.</p>;
+    if (!data.episodes) return <p className='text-white'>No episodes available.</p>;
 
     return (
         <>
@@ -54,7 +78,7 @@ function FilmInfo({ data }) {
                     allowFullScreen
                 ></iframe>
                 <h4 className="text-white mb-4">
-                    {data.name} - Tập {selectedEpisodeName}
+                    {data.name} {selectedEpisodeName ? `- Tập ${selectedEpisodeName}` : ''}
                 </h4>
             </div>
             <div className="danhsach_tap">
@@ -94,7 +118,7 @@ function FilmInfo({ data }) {
                 </div>
                 <div className="description">
                     <h4>Nội Dung Chi Tiết</h4>
-                    <p>{data.description.replace('<p>', '').replace('</p>', '')}</p>
+                    <p>{data.description.replace('<p>', '').replace('</p>','')}</p>
                 </div>
             </div>
             <div>
