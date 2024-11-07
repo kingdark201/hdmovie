@@ -1,8 +1,7 @@
 .list-card {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    row-gap: 20px;
-    column-gap: 20px;
+    gap: 20px;
 }
 
 .title_listcard{
@@ -27,6 +26,6 @@
 @media screen and (max-width: 768px) {
     .list-card {
         grid-template-columns: repeat(2, 1fr);
-        column-gap: 6px;
+        column-gap: 10px;
     }
 }
