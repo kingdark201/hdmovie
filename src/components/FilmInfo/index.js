@@ -9,6 +9,7 @@ function FilmInfo({ data }) {
     const navigate = useNavigate();
     const [selectedEpisode, setSelectedEpisode] = useState('');
     const [selectedEpisodeName, setSelectedEpisodeName] = useState('');
+    const [selectedServer, setSelectedServer] = useState('');
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,16 +21,19 @@ function FilmInfo({ data }) {
     useEffect(() => {
         const savedEpisode = localStorage.getItem('selectedEpisode');
         const savedEpisodeName = localStorage.getItem('selectedEpisodeName');
+        const savedServer = localStorage.getItem('selectedServer');
         if (savedEpisode) setSelectedEpisode(savedEpisode);
         if (savedEpisodeName) setSelectedEpisodeName(savedEpisodeName);
+        if (savedServer) setSelectedServer(savedServer);
     }, []);
 
-    const handleEpisodeClick = (embedUrl, name) => {
+    const handleEpisodeClick = (embedUrl, name, serverName) => {
         setSelectedEpisode(embedUrl);
         setSelectedEpisodeName(name);
-        // Lưu trạng thái vào localStorage
+        setSelectedServer(serverName);
         localStorage.setItem('selectedEpisode', embedUrl);
         localStorage.setItem('selectedEpisodeName', name);
+        localStorage.setItem('selectedServer', serverName);
     };
 
     const loadMoreFilms = (slug) => {
@@ -61,8 +65,12 @@ function FilmInfo({ data }) {
                             <button
                                 key={episode.name}
                                 data-video={episode.embed}
-                                className={selectedEpisodeName === episode.name ? 'active' : ''}
-                                onClick={() => handleEpisodeClick(episode.embed, episode.name)}
+                                className={
+                                    selectedEpisodeName === episode.name && selectedServer === server.server_name
+                                        ? 'active'
+                                        : ''
+                                }
+                                onClick={() => handleEpisodeClick(episode.embed, episode.name, server.server_name)}
                             >
                                 {episode.name}
                             </button>
