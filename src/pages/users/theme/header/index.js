@@ -78,16 +78,27 @@ function Header() {
         }
     };
 
-    // const navigateToFilm = (film) => {
-    //     navigate(`/phim/${film.slug}`);
-    //     setSearchQuery('');
-    //     setSearchResults([]);
-    // };
-
     const clickSearch = (slug) => {
         navigate(ROUTERS.USER.PHIM(slug));
         setSearchQuery('');
     }
+
+    const clickSubmenu = (path) => {
+        navigate(path);
+        setOpenSubMenus(false);
+    }
+
+    const clickMenuSmall = (path) => {
+        navigate(path);
+        setMenuOpen(false);
+    }
+
+    const clickSubmenuSmall = (path) => {
+        navigate(path);
+        setOpenSubMenus(false);
+        setMenuOpen(false);
+    }
+
 
     return (
         <div className='header'>
@@ -123,7 +134,7 @@ function Header() {
                                         {item.subMenu.map((column, colIndex) => (
                                             <div className='sub' key={colIndex}>
                                                 {column.map((subItem, subIndex) => (
-                                                    <li key={subIndex} onClick={() => navigate(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
+                                                    <li key={subIndex} onClick={()=>clickSubmenu(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
                                                         {subItem.title}
                                                     </li>
                                                 ))}
@@ -143,7 +154,7 @@ function Header() {
                 <div className='header-menu-small'>
                     <button className='btnX' onClick={toggleMenu}><i className="bi bi-x"></i></button>
                     {menuItems.map((item, index) => (
-                        <li key={index} onClick={() => !item.subMenu && navigate(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
+                        <li key={index} onClick={() => !item.subMenu && clickMenuSmall(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
                             <span>{item.title}</span>
                             {item.subMenu && (
                                 <>
@@ -153,7 +164,7 @@ function Header() {
                                             {item.subMenu.map((column, colIndex) => (
                                                 <div className='sub' key={colIndex}>
                                                     {column.map((subItem, subIndex) => (
-                                                        <li key={subIndex} onClick={() => navigate(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
+                                                        <li key={subIndex} onClick={() => clickSubmenuSmall(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
                                                             {subItem.title}
                                                         </li>
                                                     ))}
