@@ -1,0 +1,39 @@
+.card-search {
+    display: flex;
+    background-color: rgb(13, 7, 65);
+    margin: 10px;
+    align-items: center;
+    gap: 5px;
+    border-radius: 5px;
+
+    img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        margin-left: 10px;
+    }
+
+    .info-search {
+        display: flex;
+        flex-direction: column;
+
+        .name_v,
+        .name_e {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 20ch;
+        }
+
+        .name_v {
+            font-size: 16px;
+            margin-top: 15px;
+            color: #fff;
+        }
+
+        .name_e {
+            font-size: 13px;
+            color: #726f6f;
+        }
+    }
+}

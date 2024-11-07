@@ -1,0 +1,32 @@
+.list-card {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 20px;
+    column-gap: 20px;
+}
+
+.title_listcard{
+    color: #fff;
+    margin-top: 50px;
+}
+
+.title_category{
+    color: #fff;
+    margin-top: 0px;
+}
+
+.load-more{
+    margin-top: 10px;
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .list-card {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 6px;
+    }
+}

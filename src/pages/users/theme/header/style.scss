@@ -1,0 +1,189 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0d0731f3;
+    padding: 0 90px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+
+    .header-logo {
+        font-size: 1.5rem;
+
+        img {
+            width: 64px;
+        }
+    }
+
+    .header-search {
+        margin: 0 1rem;
+        position: relative;
+
+        .search-input {
+            width: 100%;
+            padding: 4px;
+            border: none;
+            outline: none;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search_result {
+            width: 300px;
+            height: fit-content;
+            max-height: 500px;
+            background-color: #05042c;
+            border-radius: 5px;
+            z-index: 999;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            overflow-y: auto;             
+            scrollbar-width: none;
+            -ms-overflow-style: none; 
+        
+            &::-webkit-scrollbar {
+                display: none; 
+            }
+        }
+        
+    }
+
+    .header-menu {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        list-style: none;
+        gap: 1rem;
+        margin-left: 120px;
+
+        .active{
+            color: orange;
+        }
+
+        li {
+            cursor: pointer;
+            position: relative;
+
+            &:hover{
+                color: orange;
+            }
+
+            .submenu {
+                position: absolute;
+                background-color: #05042c;
+                padding: 0.5rem;
+                width: 390px;
+                list-style: none;
+                top: 30px;
+                right: 0;
+                border-radius: 10px;
+                box-shadow: -1px 1px 9px 4px rgb(5, 5, 5);
+                z-index: 999;
+
+                div {
+                    display: flex;
+                    padding: 0.5rem;
+                    color: #fff;
+                    gap: 10px;
+
+                    li{
+                        font-size: 14px;
+                    }
+
+                    .active_sub{
+                        color: #c3d332;
+                    }
+                }
+            }
+        }
+    }
+
+    .menu-toggle {
+        display: none;
+        font-size: 1.5rem;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .header-menu-small{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #05042c;
+        padding: 10px 20px;
+        width: 250px;
+        color: #b8b5b5;
+        border-radius: 15px;
+        box-shadow: -3px 0px 6px #000;
+        z-index: 9999;
+
+        .active{
+            color: orange;
+        }
+
+        li{
+            list-style-type: none;
+            text-decoration: none;
+            cursor: pointer;
+
+            &:hover{
+                color: #fff;
+            }
+        }
+
+        .submenu-small {
+            font-size: 14px;
+            .sub{
+                .active_sub{
+                    color: #c3d332;
+                }
+            }
+        }
+
+        .btnX{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 30px;
+            background-color: transparent;
+            color: #fff;
+            border: 0;
+        }
+    }
+}
+
+@media (max-width: 950px) {
+    .header{
+        padding: 0 20px;
+
+        .header-menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            padding: 1rem;
+    
+            &.open {
+                display: flex;
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 230px;
+            }
+        }
+        .menu-toggle {
+            display: block;
+        }
+    } 
+}
+
+.sub li:hover{
+    color: #c3d332 !important;
+    cursor: pointer;
+}

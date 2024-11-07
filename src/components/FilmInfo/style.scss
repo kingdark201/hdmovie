@@ -1,0 +1,96 @@
+.film-info{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: #0d0731f3;
+    border-radius: 10px;
+    color: #fff;
+    gap: 30px;
+    
+    img{
+        margin: 10px;
+        border-radius: 10px;
+        width: 94%;
+        object-fit: cover;
+    }
+
+    .infomation{
+        display: flex;
+        flex-direction: column;
+        padding: 0 10px;
+        width: 100%;
+
+        h4{
+            margin-top: 10px;
+            color: orange;
+        }
+
+        .original_name_film{
+            color: #868383;
+        }
+
+        .details_info{
+            background-color: #060125f3;
+            padding: 10px;
+            border-radius: 10px;
+            height: 400px;
+            width: 100%;
+
+            p{
+                color: #fff;
+                font-size: 15px;
+            }
+        }
+    }
+
+    .description{
+
+        h4{
+            margin-top: 10px;
+            padding: 0 15px;
+            color: orange;
+        }
+        p{
+            text-align: justify;
+            padding: 15px;
+            background-color: #060125f3;
+            margin: 50px 10px 5px 10px;
+            border-radius: 10px;
+            max-height: fit-content;
+        }
+    }
+}
+
+.danhsach_tap{
+    background-color: #0d0731f3;
+    margin-bottom: 30px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    .server-section{
+        button{
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            border: 0;
+            margin: 2px;
+        }
+    }
+}
+
+@media (max-width: 950px) {
+    .film-info{
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .danhsach_tap{
+        flex-direction: column;
+    }
+
+    .iframe_video{
+        iframe{
+            height: 300px;
+        }
+    }
+}

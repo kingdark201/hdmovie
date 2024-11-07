@@ -1,0 +1,21 @@
+#list {
+    display: flex;
+    gap: 10px;
+    width: max-content;
+}
+
+.title_slider {
+    color: #fff;
+}
+
+#formList {
+    width: 1280px;
+    max-width: 100%;
+    overflow: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: both;
+}
+
+#formList::-webkit-scrollbar {
+    display: none;
+}

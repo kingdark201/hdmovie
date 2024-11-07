@@ -1,0 +1,10 @@
+.phim{
+    background-color: rgb(5, 1, 22);
+    padding: 30px 130px;
+}
+
+@media (max-width: 950px) {
+    .phim{
+        padding: 30px 20px;
+    }
+}

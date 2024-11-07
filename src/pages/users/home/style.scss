@@ -1,0 +1,15 @@
+.home-page{
+    background-color: rgb(5, 1, 22);
+
+    .list{
+        padding: 30px 130px;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .home-page{
+        .list{
+            padding: 30px 20px;
+        }
+    }
+}

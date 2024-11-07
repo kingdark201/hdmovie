@@ -1,0 +1,15 @@
+.phim-danh-muc{
+    background-color: rgb(5, 1, 22);
+
+    .list{
+        padding: 30px 100px;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .phim-danh-muc{
+        .list{
+            padding: 30px 20px;
+        }
+    }
+}
