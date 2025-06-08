@@ -61,7 +61,7 @@ function Header() {
                 ]
             ]
         },
-        { title: 'TV show', path: ROUTERS.USER.PHIMDM('tv-shows'), slug: 'tv-shows' }
+        { title: 'Lịch sử', path: ROUTERS.USER.HISTORY }
     ];
 
     const toggleMenu = () => setMenuOpen(!isMenuOpen);

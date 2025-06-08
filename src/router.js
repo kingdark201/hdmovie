@@ -5,6 +5,7 @@ import MasterLayout from "./pages/users/theme/masterLayout";
 import HomePage from "./pages/users/home"
 import PhimDanhuc from "./pages/users/phimdanhmuc";
 import Phim from "./pages/users/phim";
+import History from "./pages/users/history";
 
 const RenderUserRouter = () => {
     const userRouters = [
@@ -19,6 +20,10 @@ const RenderUserRouter = () => {
         {
             path: `${ROUTERS.USER.PHIM(':name')}`,
             component: <Phim />
+        },
+        {
+            path: ROUTERS.USER.HISTORY,
+            component: <History />
         }
     ];
 

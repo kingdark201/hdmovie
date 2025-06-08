@@ -58,6 +58,30 @@ function FilmInfo({ data }) {
         localStorage.setItem('selectedEpisodeName', name);
         localStorage.setItem('selectedServer', serverName);
         localStorage.setItem('currentFilmSlug', slug);
+
+        // Lưu lịch sử xem vào localStorage
+        const history = JSON.parse(localStorage.getItem('watchHistory') || '[]');
+        // Tính toán tiến độ %
+        let progress = 0;
+        if (data.total_episodes && !isNaN(Number(data.total_episodes)) && !isNaN(Number(name))) {
+            progress = Math.round((Number(name) / Number(data.total_episodes)) * 100);
+            if (progress > 100) progress = 100;
+        } else {
+            progress = 100;
+        }
+        const filmInfo = {
+            slug: slug,
+            title: data.name,
+            thumb: data.thumb_url,
+            episode: name, // Lưu số tập đã xem
+            total_episodes: data.total_episodes,
+            server: serverName,
+            progress // Tiến độ %
+        };
+        // Xóa bản ghi cũ nếu đã có
+        const newHistory = history.filter(item => item.slug !== slug);
+        newHistory.unshift(filmInfo); // Thêm mới lên đầu
+        localStorage.setItem('watchHistory', JSON.stringify(newHistory.slice(0, 30)));
     };
 
     const loadMoreFilms = (slug) => {
