@@ -108,7 +108,7 @@ function FilmInfo({ data }) {
             <div className="danhsach_tap">
                 {data.episodes.map((server, index) => (
                     <div key={index} className="server-section">
-                        <h5 className="text-white">{server.server_name}</h5>
+                        <h5 className="text-white server-name">{server.server_name}</h5>
                         {server.items.map((episode) => (
                             <button
                                 key={episode.name}

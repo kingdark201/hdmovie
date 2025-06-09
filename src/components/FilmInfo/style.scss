@@ -135,6 +135,10 @@
             background-color: orange;
             color: var(--button-text-color, #000);
         }
+
+        .server-name {
+            color: var(--film-info-text-color, #fff);
+        }
     }
 }
 
