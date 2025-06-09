@@ -1,67 +1,117 @@
-.film-info{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    background-color: #0d0731f3;
-    border-radius: 10px;
-    color: #fff;
-    gap: 30px;
-    
-    img{
-        margin: 10px;
-        border-radius: 10px;
-        width: 94%;
+.iframe_video {
+    .namefilm-episode {
+        color: var(--body-text-color, #fff) !important;
+    }
+}
+
+.film-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    background: var(--film-info-color, #060125f3);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 32px 0;
+    align-items: flex-start;
+    font-family: var(--main-font, Arial, sans-serif);
+    color: var(--film-info-text-color, #fff);
+
+    img {
+        width: 220px;
+        height: 320px;
         object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+        margin-right: 24px;
+        flex-shrink: 0;
     }
 
-    .infomation{
-        display: flex;
-        flex-direction: column;
-        padding: 0 10px;
-        width: 100%;
+    .infomation {
+        flex: 1 1 300px;
+        min-width: 260px;
+        margin-bottom: 12px;
 
-        h4{
-            margin-top: 10px;
-            color: orange;
+        h4 {
+            font-size: 1.5rem;
+            color: var(--film-info-text-color, #fff);
+            margin-bottom: 8px;
         }
 
-        .original_name_film{
-            color: #868383;
+        .original_name_film {
+            color: #bbb;
+            font-size: 1rem;
+            margin-bottom: 8px;
         }
 
-        .details_info{
-            background-color: #060125f3;
-            padding: 10px;
-            border-radius: 10px;
-            height: 400px;
-            width: 100%;
+        .details_info {
+            p {
+                margin: 4px 0;
+                color: #e0e0e0;
+                font-size: 0.98rem;
+            }
 
-            p{
-                color: #fff;
-                font-size: 15px;
+            .name_film {
+                font-weight: 600;
+                color: #ffd700;
+            }
+
+            .status_film {
+                color: #4caf50;
+            }
+
+            .quality_film {
+                color: #03a9f4;
+            }
+
+            .director,
+            .dienvien {
+                color: #ff9800;
             }
         }
     }
 
-    .description{
+    .description {
+        flex-basis: 100%;
+        margin-top: 16px;
+        background: var(--description-color, #0a093b);
+        border-radius: 8px;
+        padding: 16px;
+        color: var(--film-info-text-color, #fff);
 
-        h4{
-            margin-top: 10px;
-            padding: 0 15px;
-            color: orange;
+        h4 {
+            color: var(--film-info-text-color, #fff);
+            margin-bottom: 8px;
+            font-size: 1.2rem;
         }
-        p{
-            text-align: justify;
-            padding: 15px;
-            background-color: #060125f3;
-            margin: 50px 10px 5px 10px;
-            border-radius: 10px;
-            max-height: fit-content;
+
+        p {
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
     }
 }
 
-.danhsach_tap{
-    background-color: #0d0731f3;
+// Responsive
+@media (max-width: 700px) {
+    .film-info {
+        flex-direction: column;
+        align-items: stretch;
+
+        img {
+            margin: 0 auto 16px auto;
+            display: block;
+        }
+
+        .infomation {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.danhsach_tap {
+    background-color: var(--film-info-color, #0d0731f3);
     margin-bottom: 30px;
     padding: 10px 20px;
     border-radius: 10px;
@@ -69,32 +119,42 @@
     justify-content: space-between;
     gap: 20px;
 
-    .server-section{
-        button{
+    .server-section {
+        button {
             width: 35px;
             height: 35px;
             border-radius: 5px;
             border: 0;
             margin: 2px;
+            background-color: var(--button-color, rgb(255, 255, 255));
+            color: var(--button-text-color, #000);
+            font-family: var(--main-font, Arial, sans-serif);
         }
 
-        .active{
+        button.active {
             background-color: orange;
+            color: var(--button-text-color, #000);
         }
     }
 }
 
 @media (max-width: 950px) {
-    .film-info{
+    .film-info {
         grid-template-columns: repeat(1, 1fr);
     }
-    .danhsach_tap{
+
+    .danhsach_tap {
         flex-direction: column;
     }
 
-    .iframe_video{
-        iframe{
+    .iframe_video {
+        iframe {
             height: 260px;
         }
+    }
+
+    img {
+        width: 100%;
+        height: auto;
     }
 }

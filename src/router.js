@@ -6,6 +6,7 @@ import HomePage from "./pages/users/home"
 import PhimDanhuc from "./pages/users/phimdanhmuc";
 import Phim from "./pages/users/phim";
 import History from "./pages/users/history";
+import Setting from "./pages/users/setting";
 
 const RenderUserRouter = () => {
     const userRouters = [
@@ -24,6 +25,10 @@ const RenderUserRouter = () => {
         {
             path: ROUTERS.USER.HISTORY,
             component: <History />
+        },
+        {
+            path: "setting",
+            component: <Setting />
         }
     ];
 

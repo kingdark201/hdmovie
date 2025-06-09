@@ -5,12 +5,12 @@
 }
 
 .title_listcard{
-    color: #fff;
+    color: var(--body-text-color, #fff);
     margin-top: 50px;
 }
 
 .title_category{
-    color: #fff;
+    color: var(--body-text-color, #fff);
     margin-top: 0px;
 }
 
@@ -19,7 +19,7 @@
     width: 100%;
     background-color: transparent;
     border: 0;
-    color: #fff;
+    color: var(--body-text-color, #fff);
     font-size: 20px;
 }
 

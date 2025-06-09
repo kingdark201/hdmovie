@@ -1,37 +1,38 @@
 .history-page {
-  padding: 30px 130px;
+    padding: 30px 130px;
+    color: var(--body-text-color, #fff);
 }
 
 .history-list {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
 }
 
 .title-history {
-  color: #fff;
+    color: var(--body-text-color, #fff);
 }
 
-.btn-clear-history{
-  margin: 10px 0 20px;
-  padding: 3px 10px ;
-  background-color: rgb(3, 3, 82);
-  border: none;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 14px;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.btn-clear-history {
+    margin: 10px 0 20px;
+    padding: 3px 10px;
+    background-color: rgb(3, 3, 82);
+    border: none;
+    color: var(--button-text-color, #fff);
+    border-radius: 5px;
+    font-size: 14px;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media screen and (max-width: 768px) {
-  .history-list {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 10px;
-  }
+    .history-list {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 10px;
+    }
 
-  .history-page {
-    padding: 30px 20px;
-  }
+    .history-page {
+        padding: 30px 20px;
+    }
 }

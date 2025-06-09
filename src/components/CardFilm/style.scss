@@ -51,7 +51,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 16ch;
-            color: #fff;
+            color: var(--body-text-color, #fff);
         }
 
         .film_name_v {

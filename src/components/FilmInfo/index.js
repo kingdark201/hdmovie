@@ -101,7 +101,7 @@ function FilmInfo({ data }) {
                     frameBorder="0"
                     allowFullScreen
                 ></iframe>
-                <h4 className="text-white mb-4">
+                <h4 className="text-white mb-4 namefilm-episode">
                     {data.name} {selectedEpisodeName ? `- Tập ${selectedEpisodeName}` : ''}
                 </h4>
             </div>

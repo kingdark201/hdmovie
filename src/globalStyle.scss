@@ -1,0 +1,21 @@
+:root {
+    --header-color: #0d0731f3;
+    --header-text-color: #fff;
+    --body-color: rgb(5, 1, 22);
+    --body-text-color: #fff;
+    --footer-color: #0d0731f3;
+    --footer-text-color: #fff;
+    --button-color: white;
+    --button-text-color: #000;
+    --film-info-color: #060125f3;
+    --film-info-text-color: #fff;
+    --main-font: Arial, sans-serif;
+    --header-item-search-color: #18123a;
+    --description-color: #0a093b;
+}
+
+body {
+    background-color: var(--body-color) !important;
+    color: var(--body-text-color, #fff);
+    font-family: var(--main-font, Arial, sans-serif);
+}

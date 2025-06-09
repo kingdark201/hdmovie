@@ -1,5 +1,6 @@
 .phim{
-    background-color: rgb(5, 1, 22);
+    background-color: var(--body-color, rgb(5, 1, 22));
+    color: var(--body-text-color, #fff);
     padding: 30px 130px;
 }
 

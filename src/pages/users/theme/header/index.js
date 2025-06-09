@@ -5,10 +5,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTERS } from '../../../../utils/router';
 import { searchFilm } from '../../../../services/dataServices';
 import CardSearch from '../../../../components/CardSearch';
+import Setting from '../../setting';
 
 function Header() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [openSubMenus, setOpenSubMenus] = useState({});
+    const [showSetting, setShowSetting] = useState(false);
     const navigate = useNavigate();
 
     const [searchQuery, setSearchQuery] = useState('');  // Search query state
@@ -61,7 +63,7 @@ function Header() {
                 ]
             ]
         },
-        { title: 'Lịch sử', path: ROUTERS.USER.HISTORY }
+        { title: 'Cài đặt', onClick: () => setShowSetting(true), slug: 'setting' }
     ];
 
     const toggleMenu = () => setMenuOpen(!isMenuOpen);
@@ -99,6 +101,11 @@ function Header() {
         setMenuOpen(false);
     }
 
+    // Thêm hàm xử lý riêng cho "Cài đặt" ở menu nhỏ
+    const handleSettingSmall = () => {
+        setMenuOpen(false);
+        setShowSetting(true);
+    };
 
     return (
         <div className='header'>
@@ -116,15 +123,15 @@ function Header() {
                     onChange={handleSearchInputChange}
                 />
                 <div className='search_result'>
-                    {searchQuery && searchResults && searchResults.map((film,index) => (
-                        <CardSearch key={index} data={film} onClickCardSearch={(slug)=>clickSearch(slug)}/>
+                    {searchQuery && searchResults && searchResults.map((film, index) => (
+                        <CardSearch key={index} data={film} onClickCardSearch={(slug) => clickSearch(slug)} />
                     ))}
                 </div>
             </div>
 
             <div className='header-menu'>
                 {menuItems.map((item, index) => (
-                    <li key={index} onClick={() => !item.subMenu && navigate(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
+                    <li key={index} onClick={item.onClick ? item.onClick : () => !item.subMenu && navigate(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
                         <span>{item.title}</span>
                         {item.subMenu && (
                             <>
@@ -134,7 +141,7 @@ function Header() {
                                         {item.subMenu.map((column, colIndex) => (
                                             <div className='sub' key={colIndex}>
                                                 {column.map((subItem, subIndex) => (
-                                                    <li key={subIndex} onClick={()=>clickSubmenu(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
+                                                    <li key={subIndex} onClick={() => clickSubmenu(subItem.path)} className={slugcurrent === item.slugsub ? 'active_sub' : ''}>
                                                         {subItem.title}
                                                     </li>
                                                 ))}
@@ -154,7 +161,15 @@ function Header() {
                 <div className='header-menu-small'>
                     <button className='btnX' onClick={toggleMenu}><i className="bi bi-x"></i></button>
                     {menuItems.map((item, index) => (
-                        <li key={index} onClick={() => !item.subMenu && clickMenuSmall(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
+                        <li
+                            key={index}
+                            onClick={
+                                item.title === 'Cài đặt'
+                                    ? handleSettingSmall
+                                    : () => !item.subMenu && clickMenuSmall(item.path)
+                            }
+                            className={slugcurrent === item.slug ? 'active' : ''}
+                        >
                             <span>{item.title}</span>
                             {item.subMenu && (
                                 <>
@@ -176,6 +191,15 @@ function Header() {
                             )}
                         </li>
                     ))}
+                </div>
+            )}
+
+            {showSetting && (
+                <div className='setting-overlay' onClick={() => setShowSetting(false)}>
+                    <div className='setting-slide' onClick={e => e.stopPropagation()}>
+                        <button className='close-setting' onClick={() => setShowSetting(false)}>&times;</button>
+                        <Setting />
+                    </div>
                 </div>
             )}
         </div>

@@ -5,10 +5,10 @@
 }
 
 .footer {
-    background-color: #0d0731f3;
-    color: #fff;
+    background-color: var(--footer-color, #0d0731f3);
+    color: var(--footer-text-color, #fff);
+    font-family: var(--main-font, Arial, sans-serif);
     padding: 5px 50p;
-    font-family: Arial, sans-serif;
 
     .footer-content {
         display: flex;
@@ -24,12 +24,14 @@
             h3 {
                 font-size: 1.1rem;
                 margin-bottom: 1rem;
+                color: var(--footer-text-color, #fff);
             }
 
             p,
             ul {
                 font-size: 0.8rem;
                 line-height: 1.6;
+                color: var(--footer-text-color, #fff);
             }
 
             ul {
@@ -44,7 +46,7 @@
                         transition: color 0.3s;
 
                         &:hover {
-                            color: #fff;
+                            color: var(--footer-text-color, #fff);
                         }
                     }
                 }

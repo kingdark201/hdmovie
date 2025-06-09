@@ -2,17 +2,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0d0731f3;
+    background-color: var(--header-color, #0d0731f3);
     padding: 0 90px;
     width: 100%;
-    color: #fff;
-    font-family: Arial, sans-serif;
+    color: var(--header-text-color, #fff);
+    font-family: var(--main-font, Arial, sans-serif);
     position: fixed;
     top: 0;
     z-index: 100;
 
     .header-logo {
         font-size: 1.5rem;
+        color: var(--header-text-color, #fff);
 
         img {
             width: 64px;
@@ -30,27 +31,29 @@
             outline: none;
             border-radius: 4px;
             font-size: 1rem;
+            color: var(--header-text-color, #000);
+            background: #c0bebe;
         }
 
         .search_result {
             width: 300px;
             height: fit-content;
             max-height: 500px;
-            background-color: #05042c;
+            background: var(--header-search-color, #05042c);
             border-radius: 5px;
             z-index: 999;
             position: absolute;
             top: 40px;
             right: 0;
-            overflow-y: auto;             
+            overflow-y: auto;
             scrollbar-width: none;
-            -ms-overflow-style: none; 
-        
+            -ms-overflow-style: none;
+
             &::-webkit-scrollbar {
-                display: none; 
+                display: none;
             }
         }
-        
+
     }
 
     .header-menu {
@@ -60,22 +63,24 @@
         list-style: none;
         gap: 1rem;
         margin-left: 120px;
+        color: var(--header-text-color, #fff);
 
-        .active{
+        .active {
             color: orange;
         }
 
         li {
             cursor: pointer;
             position: relative;
+            color: var(--header-text-color, #fff);
 
-            &:hover{
+            &:hover {
                 color: orange;
             }
 
             .submenu {
                 position: absolute;
-                background-color: #05042c;
+                background-color: var(--header-search-color, #05042c);
                 padding: 0.5rem;
                 width: 390px;
                 list-style: none;
@@ -88,14 +93,14 @@
                 div {
                     display: flex;
                     padding: 0.5rem;
-                    color: #fff;
+                    color: var(--header-text-color, #fff);
                     gap: 10px;
 
-                    li{
+                    li {
                         font-size: 14px;
                     }
 
-                    .active_sub{
+                    .active_sub {
                         color: #c3d332;
                     }
                 }
@@ -108,59 +113,61 @@
         font-size: 1.5rem;
         background: none;
         border: none;
-        color: #fff;
+        color: var(--header-text-color, #fff);
         cursor: pointer;
     }
 
-    .header-menu-small{
+    .header-menu-small {
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: #05042c;
+        background-color: var(--header-search-color, #05042c);
         padding: 10px 20px;
         width: 250px;
-        color: #b8b5b5;
+        color: var(--header-text-color, #b8b5b5);
         border-radius: 15px;
         box-shadow: -3px 0px 6px #000;
         z-index: 9999;
 
-        .active{
+        .active {
             color: orange;
         }
 
-        li{
+        li {
             list-style-type: none;
             text-decoration: none;
             cursor: pointer;
+            color: var(--header-text-color, #b8b5b5);
 
-            &:hover{
-                color: #fff;
+            &:hover {
+                color: #45d332
             }
         }
 
         .submenu-small {
             font-size: 14px;
-            .sub{
-                .active_sub{
-                    color: #c3d332;
+
+            .sub {
+                .active_sub {
+                    color: #daa000;
                 }
             }
         }
 
-        .btnX{
+        .btnX {
             position: absolute;
             top: 5px;
             right: 5px;
             font-size: 30px;
             background-color: transparent;
-            color: #fff;
+            color: var(--header-text-color, #fff);
             border: 0;
         }
     }
 }
 
 @media (max-width: 950px) {
-    .header{
+    .header {
         padding: 0 20px;
 
         .header-menu {
@@ -172,7 +179,7 @@
             width: 100%;
             background-color: #333;
             padding: 1rem;
-    
+
             &.open {
                 display: flex;
                 position: absolute;
@@ -181,13 +188,19 @@
                 width: 230px;
             }
         }
+
         .menu-toggle {
             display: block;
         }
-    } 
+    }
 }
 
-.sub li:hover{
+.sub li:hover {
     color: #c3d332 !important;
     cursor: pointer;
 }
+
+.setting-overlay {
+    z-index: 20000000 !important;
+}
+

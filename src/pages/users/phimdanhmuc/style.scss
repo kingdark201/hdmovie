@@ -1,5 +1,6 @@
 .phim-danh-muc{
-    background-color: rgb(5, 1, 22);
+    background-color: var(--body-color, rgb(5, 1, 22));
+    color: var(--body-text-color, #fff);
 
     .list{
         padding: 30px 100px;

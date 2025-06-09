@@ -1,6 +1,6 @@
 .card-search {
     display: flex;
-    background-color: rgb(13, 7, 65);
+    background-color: var(--header-item-search-color, rgb(13, 7, 65));
     margin: 10px;
     align-items: center;
     gap: 5px;
@@ -28,7 +28,7 @@
         .name_v {
             font-size: 16px;
             margin-top: 15px;
-            color: #fff;
+            color: var(--header-text-color, #fff);
         }
 
         .name_e {
