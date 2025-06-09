@@ -3,19 +3,14 @@
   "name": "HD Movie",
   "icons": [
     {
-      "src": "video-production.png",
+      "src": "%PUBLIC_URL%/video-production.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     },
     {
-      "src": "video-production.png",
+      "src": "%PUBLIC_URL%/video-production.png",
       "type": "image/png",
       "sizes": "128x128"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": ".",
