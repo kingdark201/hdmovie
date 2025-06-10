@@ -27,14 +27,17 @@
     justify-content: space-between;
     align-items: center;
     color: var(--film-info-text-color, #fff);
+    font-size: 13px;
 }
 
 .setting-group input[type="color"] {
     margin-left: 12px;
-    width: 40px;
-    height: 30px;
-    border: none;
+    width: 20px;
+    height: 20px;
+    border: 0;
     background: none;
+    outline: none;
+    border-radius: 50%;
 }
 
 .setting-group select {
@@ -59,7 +62,7 @@
 
 .setting-slide {
     background: var(--body-color, #18123a);
-    width: 300px;
+    width: 250px;
     max-width: 90vw;
     height: 100vh;
     box-shadow: -2px 0 16px #000a;
@@ -87,7 +90,7 @@
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 5px 3px;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s;
@@ -114,7 +117,7 @@
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 5px 3px;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s;
