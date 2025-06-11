@@ -44,7 +44,7 @@
             z-index: 999;
             position: absolute;
             top: 40px;
-            right: 0;
+            left: -55px;
             overflow-y: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -115,6 +115,7 @@
         border: none;
         color: var(--header-text-color, #fff);
         cursor: pointer;
+        margin-top: 4px;
     }
 
     .header-menu-small {
@@ -164,6 +165,20 @@
             border: 0;
         }
     }
+
+    .header-icons {
+        visibility: hidden;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        margin:0px 10px;
+
+        i {
+            font-size: 22px;
+            cursor: pointer;
+        }
+    }
 }
 
 @media (max-width: 950px) {
@@ -191,6 +206,14 @@
 
         .menu-toggle {
             display: block;
+        }
+
+        .logo-name {
+            display: none;
+        }
+
+        .header-icons {
+            visibility: visible;
         }
     }
 }

@@ -7,6 +7,9 @@ import PhimDanhuc from "./pages/users/phimdanhmuc";
 import Phim from "./pages/users/phim";
 import History from "./pages/users/history";
 import Setting from "./pages/users/setting";
+import Login from './pages/admin/login';
+import UserAdmin from './pages/admin/users';
+import Register from './pages/admin/register';
 
 const RenderUserRouter = () => {
     const userRouters = [
@@ -33,7 +36,18 @@ const RenderUserRouter = () => {
     ];
 
     const adminRouters = [
-        
+        {
+            path: ROUTERS.ADMIN.LOGIN,
+            component: <Login />
+        },
+        {
+            path: ROUTERS.ADMIN.USERS,
+            component: <UserAdmin />
+        },
+        {
+            path: "/register",
+            component: <Register />
+        }
     ];
 
     const allRouters = [...userRouters, ...adminRouters];

@@ -5,12 +5,16 @@ import RouterCustom from './router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import './globalStyle.scss';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <RouterCustom />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+          <RouterCustom />
+      </BrowserRouter>
+    </Provider>
 );
 
 // Khởi tạo biến CSS từ localStorage khi app khởi động

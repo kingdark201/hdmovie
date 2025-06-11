@@ -63,7 +63,8 @@ function Header() {
                 ]
             ]
         },
-        { title: 'Cài đặt', onClick: () => setShowSetting(true), slug: 'setting' }
+        { title: 'Cài đặt', onClick: () => setShowSetting(true), slug: 'setting' } ,
+        {title: 'Tài khoản', path: '/admin/users', slug: 'account'}
     ];
 
     const toggleMenu = () => setMenuOpen(!isMenuOpen);
@@ -111,7 +112,7 @@ function Header() {
         <div className='header'>
             <div className='header-logo' onClick={() => navigate('/')}>
                 <img src={logo} alt='logo' />
-                <span>HD<sup>movies</sup></span>
+                <span className='logo-name'>HD<sup>movies</sup></span>
             </div>
 
             <div className='header-search'>
@@ -129,10 +130,22 @@ function Header() {
                 </div>
             </div>
 
+            <div className="header-icons">
+                <i className="bi bi-person" title="Tài khoản" onClick={()=>navigate('/admin/users')}></i>
+                <i className="bi bi-gear" title="Cài đặt" onClick={handleSettingSmall}></i>
+            </div>
+
             <div className='header-menu'>
                 {menuItems.map((item, index) => (
-                    <li key={index} onClick={item.onClick ? item.onClick : () => !item.subMenu && navigate(item.path)} className={slugcurrent === item.slug ? 'active' : ''}>
-                        <span>{item.title}</span>
+                    <li
+                        key={index}
+                        onClick={item.onClick ? item.onClick : () => !item.subMenu && navigate(item.path)}
+                        className={slugcurrent === item.slug ? 'active' : ''}
+                    >
+                        <span>
+                            {/* Nếu là Tài khoản thì đã có icon, các mục khác giữ nguyên */}
+                            {item.slug === 'account' ? item.title : item.title}
+                        </span>
                         {item.subMenu && (
                             <>
                                 <i className="bi bi-chevron-compact-down" onClick={() => toggleSubMenu(index)}></i>
@@ -160,6 +173,7 @@ function Header() {
             {isMenuOpen && (
                 <div className='header-menu-small'>
                     <button className='btnX' onClick={toggleMenu}><i className="bi bi-x"></i></button>
+                    {/* Xóa 2 icon ở đây, chỉ giữ lại menu nhỏ */}
                     {menuItems.map((item, index) => (
                         <li
                             key={index}
@@ -170,7 +184,10 @@ function Header() {
                             }
                             className={slugcurrent === item.slug ? 'active' : ''}
                         >
-                            <span>{item.title}</span>
+                            <span>
+                                {/* Nếu là Tài khoản thì đã có icon, các mục khác giữ nguyên */}
+                                {item.slug === 'account' ? item.title : item.title}
+                            </span>
                             {item.subMenu && (
                                 <>
                                     <i className="bi bi-chevron-compact-down" onClick={() => toggleSubMenu(index)}></i>

@@ -18,7 +18,7 @@
 .btn-clear-history {
     margin: 10px 0 20px;
     padding: 3px 10px;
-    background-color: rgb(3, 3, 82);
+    background-color: var(--button-color, rgb(3, 3, 82));
     border: none;
     color: var(--button-text-color, #fff);
     border-radius: 5px;

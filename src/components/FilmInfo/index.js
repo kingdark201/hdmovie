@@ -4,6 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTERS } from '../../utils/router';
 import { loadNewFilmsRandom } from '../../utils/core';
 import ListCard from '../ListCard';
+// Thêm import cho commentServices
+import { addComment, getCommentBySlug, deleteComment } from '../../services/commentServices';
+import CommentItem from '../CommentItem';
+import Message from '../Message';
 
 function FilmInfo({ data }) {
     const navigate = useNavigate();
@@ -12,6 +16,13 @@ function FilmInfo({ data }) {
     const [selectedServer, setSelectedServer] = useState('');
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
+    // State cho comment
+    const [comments, setComments] = useState([]);
+    const [commentInput, setCommentInput] = useState('');
+    const [commentLoading, setCommentLoading] = useState(false);
+    const [commentError, setCommentError] = useState('');
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deleteCommentId, setDeleteCommentId] = useState(null);
 
     const location = useLocation();
     const pathname = location.pathname;
@@ -88,6 +99,85 @@ function FilmInfo({ data }) {
         navigate(`/${ROUTERS.USER.PHIMDM(slug)}`);
     };
 
+    // Lấy user từ localStorage (nếu có)
+    const user = JSON.parse(localStorage.getItem('authUser') || 'null');
+    const token = localStorage.getItem('authToken');
+
+    // Load comment khi slug thay đổi
+    useEffect(() => {
+        async function fetchComments() {
+            setCommentLoading(true);
+            setCommentError('');
+            try {
+                const res = await getCommentBySlug(slug);
+                setComments(res.comments || []);
+            } catch (e) {
+                setCommentError('Không thể tải bình luận');
+            }
+            setCommentLoading(false);
+        }
+        if (slug) fetchComments();
+    }, [slug]);
+
+    // Thêm bình luận mới
+    const handleAddComment = async (e) => {
+        e.preventDefault();
+        if (!commentInput.trim()) return;
+        setCommentLoading(true);
+        setCommentError('');
+        try {
+            const res = await addComment(
+                {
+                    comment: commentInput,
+                    slug_film: slug
+                },
+                token
+            );
+            if (res && res.success !== false && !res.error && !res.message) {
+                setCommentInput('');
+                const reload = await getCommentBySlug(slug);
+                setComments(reload.comments || []);
+            } else {
+                setCommentError('Đăng nhập để bình luận');
+                setCommentInput('');
+            }
+        } catch (e) {
+            setCommentError('Không thể gửi bình luận');
+        }
+        setCommentLoading(false);
+    };
+
+    // Xóa bình luận
+    const handleDeleteComment = (commentId) => {
+        setDeleteCommentId(commentId);
+        setShowDeleteConfirm(true);
+    };
+
+    const confirmDeleteComment = async () => {
+        setShowDeleteConfirm(false);
+        if (!deleteCommentId) return;
+        setCommentLoading(true);
+        try {
+            const res = await deleteComment(deleteCommentId, token);
+            if (res && res.success !== false) {
+                // Sau khi xóa thành công, reload lại danh sách comment từ server
+                const reload = await getCommentBySlug(slug);
+                setComments(reload.comments || []);
+            } else {
+                setCommentError(res.error || 'Không thể xóa bình luận');
+            }
+        } catch (e) {
+            setCommentError('Không thể xóa bình luận');
+        }
+        setCommentLoading(false);
+        setDeleteCommentId(null);
+    };
+
+    const cancelDeleteComment = () => {
+        setShowDeleteConfirm(false);
+        setDeleteCommentId(null);
+    };
+
     if (!data.episodes) return <p className='text-white'>No episodes available.</p>;
 
     return (
@@ -144,6 +234,56 @@ function FilmInfo({ data }) {
                     <h4>Nội Dung Chi Tiết</h4>
                     <p>{data.description.replace('<p>', '').replace('</p>','')}</p>
                 </div>
+            </div>
+            {/* PHẦN COMMENT */}
+            <div className="film-comments">
+                <h4>Bình luận</h4>
+                <form onSubmit={handleAddComment} className="comment-form">
+                    <input
+                        type="text"
+                        placeholder="Nhập bình luận..."
+                        value={commentInput}
+                        onChange={e => setCommentInput(e.target.value)}
+                        disabled={commentLoading}
+                        required
+                    />
+                    <button type="submit" disabled={commentLoading || !commentInput.trim()}>
+                        Gửi
+                    </button>
+                </form>
+                {/* Thông báo lỗi sử dụng Message */}
+                {commentError && <Message type="error">{commentError}</Message>}
+                {commentLoading && <div className="comment-loading">Đang xử lý...</div>}
+                <div className="comment-list">
+                    {comments && comments.length > 0 ? (
+                        comments.map((c, idx) => (
+                            <CommentItem
+                                key={c._id || idx}
+                                avatar={c.avatar || c.user?.avatar}
+                                username={c.username || c.user?.username || 'unknown'}
+                                time={c.createdAt ? c.createdAt : ''}
+                                comment={c.comment}
+                                onDelete={
+                                    user && (user._id === c.user_id || user._id === c.user?.id || user._id === c.user?._id)
+                                        ? () => handleDeleteComment(c.id)
+                                        : undefined
+                                }
+                            />
+                        ))
+                    ) : (
+                        <div className="comment-empty">Chưa có bình luận nào.</div>
+                    )}
+                </div>
+                {/* Hiển thị xác nhận xóa bình luận */}
+                {showDeleteConfirm && (
+                    <Message
+                        type="confirm"
+                        onConfirm={confirmDeleteComment}
+                        onCancel={cancelDeleteComment}
+                    >
+                        Bạn có chắc muốn xóa bình luận này?
+                    </Message>
+                )}
             </div>
             <div>
                 {loading && <p className="text-center">Đang tải...</p>}

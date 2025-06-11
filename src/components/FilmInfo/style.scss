@@ -142,6 +142,75 @@
     }
 }
 
+.film-comments {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--film-info-color, #0a093b);
+    border-radius: 8px;
+
+    h4 {
+        color: var(--film-info-text-color, #fff);
+        margin-bottom: 16px;
+        font-size: 1.2rem;
+    }
+
+    .comment {
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+
+        .comment-author {
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        .comment-content {
+            color: #e0e0e0;
+            font-size: 0.98rem;
+            margin: 4px 0;
+        }
+    }
+
+    .comment-form {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        input[type="text"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #222;
+            color: #fff;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+    }
+}
+
 @media (max-width: 950px) {
     .film-info {
         grid-template-columns: repeat(1, 1fr);

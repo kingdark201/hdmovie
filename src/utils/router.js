@@ -6,6 +6,7 @@ export const ROUTERS = {
         HISTORY: 'history', // Thêm route lịch sử
     },
     ADMIN: {
-        
+        LOGIN: '/login', // Thêm route đăng nhập admin
+        USERS: '/admin/users', // Thêm route quản lý user
     }
 }
