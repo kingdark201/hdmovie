@@ -8,12 +8,14 @@ import ListCard from '../ListCard';
 import { addComment, getCommentBySlug, deleteComment } from '../../services/commentServices';
 import CommentItem from '../CommentItem';
 import Message from '../Message';
+import { upsertHistory, getHistory } from '../../services/filmHistoryServices';
 
 function FilmInfo({ data }) {
     const navigate = useNavigate();
-    const [selectedEpisode, setSelectedEpisode] = useState('');
-    const [selectedEpisodeName, setSelectedEpisodeName] = useState('');
-    const [selectedServer, setSelectedServer] = useState('');
+    // Khởi tạo state từ localStorage để giữ active khi reload
+    const [selectedEpisode, setSelectedEpisode] = useState(() => localStorage.getItem('selectedEpisode') || '');
+    const [selectedEpisodeName, setSelectedEpisodeName] = useState(() => localStorage.getItem('selectedEpisodeName') || '');
+    const [selectedServer, setSelectedServer] = useState(() => localStorage.getItem('selectedServer') || '');
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
     // State cho comment
@@ -23,10 +25,15 @@ function FilmInfo({ data }) {
     const [commentError, setCommentError] = useState('');
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteCommentId, setDeleteCommentId] = useState(null);
+    const [historyLoaded, setHistoryLoaded] = useState(false);
 
     const location = useLocation();
     const pathname = location.pathname;
     const slug = pathname.split('/').pop();
+
+    // Lấy user từ localStorage (nếu có)
+    const user = JSON.parse(localStorage.getItem('authUser') || 'null');
+    const token = localStorage.getItem('authToken');
 
     // Load phim ngẫu nhiên
     useEffect(() => {
@@ -58,10 +65,41 @@ function FilmInfo({ data }) {
             localStorage.removeItem('selectedEpisodeName');
             localStorage.removeItem('selectedServer');
         }
+        setHistoryLoaded(false); // Đánh dấu cần kiểm tra lại lịch sử
     }, [slug]);
 
+    
+    // Kiểm tra lịch sử xem phim từ server, nếu có thì active tập đã xem
+    useEffect(() => {
+        async function checkFilmHistory() {
+            if (!user || !token || !slug || historyLoaded) return;
+            try {
+                const res = await getHistory(token);
+                
+                if (res && Array.isArray(res.data)) {
+                    const filmHis = res.data.find(item => item.slug === slug && (!user.id || item.user_id === user.id || item.user_id === user._id));
+                    if (filmHis && filmHis.episode) {
+                        setSelectedEpisode(filmHis.embeb); // ensure selectedEpisode is set
+                        setSelectedEpisodeName(filmHis.episode);
+                        setSelectedServer(filmHis.server);
+                        localStorage.setItem('selectedEpisode', filmHis.embeb);
+                        localStorage.setItem('selectedEpisodeName', filmHis.episode);
+                        localStorage.setItem('selectedServer', filmHis.server);
+                    }
+                }
+            } catch (e) {
+                // ignore
+            }
+            setHistoryLoaded(true);
+        }
+        if (data && data.episodes && !historyLoaded) {
+            checkFilmHistory();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [data, slug, user, token, historyLoaded]); // Không thêm selectedEpisode... vào dependency để tránh lặp
+
     // Cập nhật trạng thái và lưu vào localStorage khi click tập phim
-    const handleEpisodeClick = (embedUrl, name, serverName) => {
+    const handleEpisodeClick = async (embedUrl, name, serverName) => {
         setSelectedEpisode(embedUrl);
         setSelectedEpisodeName(name);
         setSelectedServer(serverName);
@@ -70,8 +108,7 @@ function FilmInfo({ data }) {
         localStorage.setItem('selectedServer', serverName);
         localStorage.setItem('currentFilmSlug', slug);
 
-        // Lưu lịch sử xem vào localStorage
-        const history = JSON.parse(localStorage.getItem('watchHistory') || '[]');
+        // Lưu lịch sử xem vào database qua API
         // Tính toán tiến độ %
         let progress = 0;
         if (data.total_episodes && !isNaN(Number(data.total_episodes)) && !isNaN(Number(name))) {
@@ -80,28 +117,32 @@ function FilmInfo({ data }) {
         } else {
             progress = 100;
         }
+        // Chuẩn bị dữ liệu gửi lên API
         const filmInfo = {
-            slug: slug,
+            user_id: user ? user.id : null,
             title: data.name,
             thumb: data.thumb_url,
-            episode: name, // Lưu số tập đã xem
+            episode: name,
             total_episodes: data.total_episodes,
             server: serverName,
-            progress // Tiến độ %
+            progress,
+            slug,
+            embeb: embedUrl, // changed from embed: embedUrl
         };
-        // Xóa bản ghi cũ nếu đã có
-        const newHistory = history.filter(item => item.slug !== slug);
-        newHistory.unshift(filmInfo); // Thêm mới lên đầu
-        localStorage.setItem('watchHistory', JSON.stringify(newHistory.slice(0, 30)));
+
+        // Chỉ gọi API nếu có user và token
+        if (user && user.id && token) {
+            try {
+                await upsertHistory(filmInfo, token);
+            } catch (e) {
+                // Có thể log lỗi nếu cần
+            }
+        }
     };
 
     const loadMoreFilms = (slug) => {
         navigate(`/${ROUTERS.USER.PHIMDM(slug)}`);
     };
-
-    // Lấy user từ localStorage (nếu có)
-    const user = JSON.parse(localStorage.getItem('authUser') || 'null');
-    const token = localStorage.getItem('authToken');
 
     // Load comment khi slug thay đổi
     useEffect(() => {
@@ -204,7 +245,9 @@ function FilmInfo({ data }) {
                                 key={episode.name}
                                 data-video={episode.embed}
                                 className={
-                                    selectedEpisodeName === episode.name && selectedServer === server.server_name
+                                    String(selectedEpisodeName) === episode.name &&
+                                    String(selectedServer) === server.server_name &&
+                                    String(selectedEpisode) === episode.embed
                                         ? 'active'
                                         : ''
                                 }
@@ -232,7 +275,7 @@ function FilmInfo({ data }) {
                 </div>
                 <div className="description">
                     <h4>Nội Dung Chi Tiết</h4>
-                    <p>{data.description.replace('<p>', '').replace('</p>','')}</p>
+                    <p>{data.description.replace('<p>', '').replace('</p>', '')}</p>
                 </div>
             </div>
             {/* PHẦN COMMENT */}

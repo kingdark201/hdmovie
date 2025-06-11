@@ -3,7 +3,7 @@ import './style.scss';
 import { useNavigate } from 'react-router-dom';
 import { ROUTERS } from '../../utils/router';
 
-function CardHistory({ film }) {
+function CardHistory({ film, onDelete }) {
     const navigate = useNavigate();
     const { episode, total_episodes, progress, title, thumb, slug } = film;
 
@@ -11,8 +11,19 @@ function CardHistory({ film }) {
         navigate(`/${ROUTERS.USER.PHIM(slug)}`);
     }
 
+    const handleDelete = (e) => {
+        e.stopPropagation();
+        if (onDelete) onDelete(slug);
+    }
+
     return (
-        <div className='card-film' onClick={handleClick}>
+        <div className='card-film' onClick={handleClick} style={{ position: 'relative' }}>
+            {/* Icon delete ở góc phải trên cùng */}
+            <i
+                className="bi bi-trash icon-delete"
+                title="Xóa lịch sử phim này"
+                onClick={handleDelete}
+            />
             <div className='episodes_language'>
                 {`Tiến độ: ${progress || '0'}%`}
             </div>
