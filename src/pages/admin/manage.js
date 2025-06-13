@@ -223,6 +223,7 @@ function ManageAdmin() {
                                     id={u._id}
                                     avatar={u.avatar}
                                     username={u.username}
+                                    role={u.role || 'user'}
                                     createdAt={u.createdAt}
                                     onDelete={handleDeleteUser}
                                 />
