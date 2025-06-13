@@ -33,7 +33,7 @@ const Register = () => {
     };
 
     return (
-        <div className="login-container">
+        <div className="login-container animate__animated animate__slideInDown">
             <form onSubmit={handleSubmit}>
                 <h2>Đăng ký</h2>
                 <input

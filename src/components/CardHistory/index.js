@@ -17,8 +17,7 @@ function CardHistory({ film, onDelete }) {
     }
 
     return (
-        <div className='card-film' onClick={handleClick} style={{ position: 'relative' }}>
-            {/* Icon delete ở góc phải trên cùng */}
+        <div className='card-film animate__animated animate__bounceIn' onClick={handleClick} style={{ position: 'relative' }}>
             <i
                 className="bi bi-trash icon-delete"
                 title="Xóa lịch sử phim này"

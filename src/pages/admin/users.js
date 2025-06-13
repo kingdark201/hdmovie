@@ -152,7 +152,7 @@ const UserAdmin = () => {
                                     <img
                                         src={editData.avatar}
                                         alt="avatar"
-                                        className="user-admin-avatar-img"
+                                        className="user-admin-avatar-img animate__animated animate__ZoomIn"
                                         onError={e => { e.target.src = 'https://via.placeholder.com/96?text=No+Avatar'; }}
                                     />
                                 ) : (

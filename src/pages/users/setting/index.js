@@ -60,9 +60,9 @@ function Setting() {
     };
 
     return (
-        <div className="setting-page">
+        <div className="setting-page animate__animated animate__slideInRight">
             <h2>Cài đặt giao diện</h2>
-            <div className="setting-group">
+            <div className="setting-group animate__animated animate__fadeIn">
                 <label>Màu Header: <input type="color" name="headerColor" value={settings.headerColor} onChange={handleChange} /></label>
                 <label>Màu chữ Header: <input type="color" name="headerTextColor" value={settings.headerTextColor} onChange={handleChange} /></label>
                 <label>Màu Body: <input type="color" name="bodyColor" value={settings.bodyColor} onChange={handleChange} /></label>

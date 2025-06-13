@@ -18,7 +18,7 @@ function CardFilm({ film }) {
     }
 
     return (
-        <div className='card-film' onClick={handleClick}>
+        <div className='card-film animate__animated animate__zoomIn' onClick={handleClick}>
             <div className='episodes_language'>
                 {`${current_episode || 0}/${total_episodes || '?'}`}
             </div>

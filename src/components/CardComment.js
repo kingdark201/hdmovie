@@ -3,7 +3,7 @@ import './CardComment.scss';
 
 function CardComment({ id, username, slug, comment, time, onDelete }) {
     return (
-        <div className="card-comment-row">
+        <div className="card-comment-row animate__animated animate__fadeInLeft">
             <div className="card-comment-info">
                 <div className="card-comment-username">{username||'uknown'}</div>
                 <div className="card-comment-slug">{slug||'slug default'}</div>

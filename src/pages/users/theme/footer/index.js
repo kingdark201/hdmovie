@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 function Footer() {
     return (
-        <footer className="footer">
+        <footer className="footer animate__animated animate__slideInUp">
             <div className="footer-content">
                 <div className="footer-section about">
                     <h3>Về chúng tôi</h3>

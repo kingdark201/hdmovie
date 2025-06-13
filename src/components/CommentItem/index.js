@@ -3,7 +3,7 @@ import './style.scss';
 
 function CommentItem({ avatar, username, time, comment, onDelete }) {
     return (
-        <div className="comment-item-row">
+        <div className="comment-item-row animate__animated animate__slideInLeft">
             <img
                 src={avatar || 'https://antimatter.vn/wp-content/uploads/2022/10/anh-avatar-chill-bau-troi-dem.jpg'}
                 alt="avatar"

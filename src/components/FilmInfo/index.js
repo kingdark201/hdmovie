@@ -222,7 +222,7 @@ function FilmInfo({ data }) {
                     {data.name} {selectedEpisodeName ? `- Tập ${selectedEpisodeName}` : ''}
                 </h4>
             </div>
-            <div className="danhsach_tap">
+            <div className="danhsach_tap animate__animated animate__slideInUp">
                 {data.episodes.map((server, index) => (
                     <div key={index} className="server-section">
                         <h5 className="server-name">{server.server_name}</h5>
@@ -245,7 +245,7 @@ function FilmInfo({ data }) {
                     </div>
                 ))}
             </div>
-            <div className="film-info">
+            <div className="film-info animate__animated animate__slideInUp">
                 <img src={data.thumb_url} alt={data.name} />
                 <div className="infomation">
                     <h4>{data.name}</h4>
@@ -265,7 +265,7 @@ function FilmInfo({ data }) {
                 </div>
             </div>
             {/* PHẦN COMMENT */}
-            <div className="film-comments">
+            <div className="film-comments animate__animated animate__slideInUp">
                 <h4>Bình luận</h4>
                 <form onSubmit={handleAddComment} className="comment-form">
                     <input

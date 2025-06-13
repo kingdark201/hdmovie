@@ -3,7 +3,7 @@ import './CardUser.scss';
 
 function CardUser({ id,avatar, username, createdAt, onDelete }) {
     return (
-        <div className="card-user-row">
+        <div className="card-user-row animate__animated animate__fadeInLeft">
             <img
                 src={avatar || 'https://antimatter.vn/wp-content/uploads/2022/10/anh-avatar-chill-bau-troi-dem.jpg'}
                 alt="avatar"

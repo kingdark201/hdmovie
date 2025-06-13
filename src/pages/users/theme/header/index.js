@@ -14,7 +14,7 @@ function Header() {
     const [showSetting, setShowSetting] = useState(false);
     const navigate = useNavigate();
 
-    const [searchQuery, setSearchQuery] = useState('');  // Search query state
+    const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
     const location = useLocation();
@@ -104,20 +104,19 @@ function Header() {
         setMenuOpen(false);
     }
 
-    // Thêm hàm xử lý riêng cho "Cài đặt" ở menu nhỏ
     const handleSettingSmall = () => {
         setMenuOpen(false);
         setShowSetting(true);
     };
 
     return (
-        <div className='header'>
-            <div className='header-logo' onClick={() => navigate('/')}>
+        <div className='header animate__animated animate__slideInDown'>
+            <div className='header-logo animate__animated animate__backInLeft' onClick={() => navigate('/')}>
                 <img src={logo} alt='logo' />
                 <span className='logo-name'>HD<sup>movies</sup></span>
             </div>
 
-            <div className='header-search'>
+            <div className='header-search animate__animated animate__bounceIn'>
                 <input
                     type="text"
                     placeholder="Tìm kiếm..."
@@ -132,12 +131,12 @@ function Header() {
                 </div>
             </div>
 
-            <div className="header-icons">
+            <div className="header-icons animate__animated animate__fadeInDown">
                 <i className="bi bi-person" title="Tài khoản" onClick={()=>navigate('/admin/users')}></i>
                 <i className="bi bi-gear" title="Cài đặt" onClick={handleSettingSmall}></i>
             </div>
 
-            <div className='header-menu'>
+            <div className='header-menu animate__animated animate__fadeInDown'>
                 {menuItems.map((item, index) => (
                     <li
                         key={index}
@@ -173,7 +172,7 @@ function Header() {
             <button className='menu-toggle' onClick={toggleMenu}>☰</button>
 
             {isMenuOpen && (
-                <div className='header-menu-small'>
+                <div className='header-menu-small animate__animated animate__fadeInDown'>
                     <button className='btnX' onClick={toggleMenu}><i className="bi bi-x"></i></button>
                     {/* Xóa 2 icon ở đây, chỉ giữ lại menu nhỏ */}
                     {menuItems.map((item, index) => (

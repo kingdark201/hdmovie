@@ -5,7 +5,7 @@ function CardSearch({ data, onClickCardSearch }) {
     const { name, original_name, poster_url, slug } = data;
 
     return (
-        <div className='card-search' onClick={()=>onClickCardSearch(slug)}>
+        <div className='card-search animate__animated animate__bounceInUp' onClick={()=>onClickCardSearch(slug)}>
             <img
                 src={
                     !poster_url ||

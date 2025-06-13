@@ -1,7 +1,6 @@
 .message-box {
     padding: 5px 20px;
     border-radius: 6px;
-    margin: 16px auto;
     max-width: 400px;
     font-size: 1.1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -45,12 +44,21 @@
     border: 1.5px solid #f1c40f;
     color: #0f0f0f;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: none;
     z-index: 1001;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-    width: 260px;
+    width: 400px;
+    height: fit-content;
+    max-height: 90vh;
 }
 
 .message-content {
@@ -80,4 +88,10 @@
 .btn-cancel {
     background: #b32010;
     color: #fff;
+}
+
+@media (max-width: 950px) {
+    .message-confirm {
+        width: 260px;
+    }
 }

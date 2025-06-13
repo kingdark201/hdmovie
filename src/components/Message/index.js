@@ -14,7 +14,7 @@ function Message({ type = 'success', children, onConfirm, onCancel }) {
     if (!visible) return null;
 
     return (
-        <div className={`message-box message-${type}`}>
+        <div className={`message-box message-${type} animate__animated animate__bounceIn`}>
             <div className="message-content">{children}</div>
             {type === 'confirm' && (
                 <div className="message-actions">
