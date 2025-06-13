@@ -13,16 +13,17 @@ const Login = () => {
     const { error, isAuthenticated } = useSelector((state) => state.auth);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+     const { token, user: currentUser } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuthenticated && token && currentUser) {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Reset errorMessage trước khi submit
+        setErrorMessage(''); 
         const resultAction = await dispatch(login({ username, password }));
         
         if (login.fulfilled.match(resultAction)) {

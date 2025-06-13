@@ -6,6 +6,7 @@ import { ROUTERS } from '../../../../utils/router';
 import { searchFilm } from '../../../../services/dataServices';
 import CardSearch from '../../../../components/CardSearch';
 import Setting from '../../setting';
+import { useSelector } from 'react-redux';
 
 function Header() {
     const [isMenuOpen, setMenuOpen] = useState(false);
@@ -19,6 +20,7 @@ function Header() {
     const location = useLocation();
     const pathname = location.pathname;
     const slugcurrent = pathname.split('/').pop();
+    const { token, user: currentUser } = useSelector((state) => state.auth);
 
     const menuItems = [
         { title: 'Phim lẻ', path: ROUTERS.USER.PHIMDM('phim-le'), slug: 'phim-le' },
@@ -64,7 +66,7 @@ function Header() {
             ]
         },
         { title: 'Cài đặt', onClick: () => setShowSetting(true), slug: 'setting' } ,
-        {title: 'Tài khoản', path: '/admin/users', slug: 'account'}
+        {title: token && currentUser ? currentUser.username : 'Tài khoản', path: '/admin/users', slug: 'account'}
     ];
 
     const toggleMenu = () => setMenuOpen(!isMenuOpen);

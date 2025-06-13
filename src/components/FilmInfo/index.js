@@ -9,16 +9,17 @@ import { addComment, getCommentBySlug, deleteComment } from '../../services/comm
 import CommentItem from '../CommentItem';
 import Message from '../Message';
 import { upsertHistory, getHistory } from '../../services/filmHistoryServices';
+import { useSelector } from 'react-redux';
 
 function FilmInfo({ data }) {
     const navigate = useNavigate();
-    // Khởi tạo state từ localStorage để giữ active khi reload
+
     const [selectedEpisode, setSelectedEpisode] = useState(() => localStorage.getItem('selectedEpisode') || '');
     const [selectedEpisodeName, setSelectedEpisodeName] = useState(() => localStorage.getItem('selectedEpisodeName') || '');
     const [selectedServer, setSelectedServer] = useState(() => localStorage.getItem('selectedServer') || '');
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
-    // State cho comment
+
     const [comments, setComments] = useState([]);
     const [commentInput, setCommentInput] = useState('');
     const [commentLoading, setCommentLoading] = useState(false);
@@ -31,16 +32,12 @@ function FilmInfo({ data }) {
     const pathname = location.pathname;
     const slug = pathname.split('/').pop();
 
-    // Lấy user từ localStorage (nếu có)
-    const user = JSON.parse(localStorage.getItem('authUser') || 'null');
-    const token = localStorage.getItem('authToken');
+    const { token, user: currentUser } = useSelector((state) => state.auth);
 
-    // Load phim ngẫu nhiên
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
     }, []);
 
-    // Khôi phục trạng thái từ localStorage khi slug hoặc data thay đổi
     useEffect(() => {
         const savedFilmSlug = localStorage.getItem('currentFilmSlug');
         const savedEpisode = localStorage.getItem('selectedEpisode');
@@ -48,38 +45,33 @@ function FilmInfo({ data }) {
         const savedServer = localStorage.getItem('selectedServer');
 
         if (savedFilmSlug === slug) {
-            // Khôi phục trạng thái nếu slug khớp
             setSelectedEpisode(savedEpisode || '');
             setSelectedEpisodeName(savedEpisodeName || '');
             setSelectedServer(savedServer || '');
         } else {
-            // Reset trạng thái nếu slug không khớp
             setSelectedEpisode('');
             setSelectedEpisodeName('');
             setSelectedServer('');
-            // Lưu thông tin phim mới vào localStorage
             localStorage.setItem('currentFilmSlug', slug);
 
-            //Xóa localStorage phim cũ
             localStorage.removeItem('selectedEpisode');
             localStorage.removeItem('selectedEpisodeName');
             localStorage.removeItem('selectedServer');
         }
-        setHistoryLoaded(false); // Đánh dấu cần kiểm tra lại lịch sử
+        setHistoryLoaded(false);
     }, [slug]);
 
-    
-    // Kiểm tra lịch sử xem phim từ server, nếu có thì active tập đã xem
+
     useEffect(() => {
         async function checkFilmHistory() {
-            if (!user || !token || !slug || historyLoaded) return;
+            if (!currentUser || !token || !slug || historyLoaded) return;
             try {
                 const res = await getHistory(token);
-                
-                if (res && Array.isArray(res.data)) {
-                    const filmHis = res.data.find(item => item.slug === slug && (!user.id || item.user_id === user.id || item.user_id === user._id));
+
+                if (res && res.status === 'success' && Array.isArray(res.data)) {
+                    const filmHis = res.data.find(item => item.slug === slug && (!currentUser.id || item.user_id === currentUser.id || item.user_id === currentUser._id));
                     if (filmHis && filmHis.episode) {
-                        setSelectedEpisode(filmHis.embeb); // ensure selectedEpisode is set
+                        setSelectedEpisode(filmHis.embeb);
                         setSelectedEpisodeName(filmHis.episode);
                         setSelectedServer(filmHis.server);
                         localStorage.setItem('selectedEpisode', filmHis.embeb);
@@ -88,17 +80,15 @@ function FilmInfo({ data }) {
                     }
                 }
             } catch (e) {
-                // ignore
+                console.error('Error fetching film history:', e);
             }
             setHistoryLoaded(true);
         }
         if (data && data.episodes && !historyLoaded) {
             checkFilmHistory();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, slug, user, token, historyLoaded]); // Không thêm selectedEpisode... vào dependency để tránh lặp
+    }, [data, slug, currentUser, token, historyLoaded]);
 
-    // Cập nhật trạng thái và lưu vào localStorage khi click tập phim
     const handleEpisodeClick = async (embedUrl, name, serverName) => {
         setSelectedEpisode(embedUrl);
         setSelectedEpisodeName(name);
@@ -108,8 +98,6 @@ function FilmInfo({ data }) {
         localStorage.setItem('selectedServer', serverName);
         localStorage.setItem('currentFilmSlug', slug);
 
-        // Lưu lịch sử xem vào database qua API
-        // Tính toán tiến độ %
         let progress = 0;
         if (data.total_episodes && !isNaN(Number(data.total_episodes)) && !isNaN(Number(name))) {
             progress = Math.round((Number(name) / Number(data.total_episodes)) * 100);
@@ -117,9 +105,9 @@ function FilmInfo({ data }) {
         } else {
             progress = 100;
         }
-        // Chuẩn bị dữ liệu gửi lên API
+
         const filmInfo = {
-            user_id: user ? user.id : null,
+            user_id: currentUser ? currentUser.id : null,
             title: data.name,
             thumb: data.thumb_url,
             episode: name,
@@ -127,15 +115,14 @@ function FilmInfo({ data }) {
             server: serverName,
             progress,
             slug,
-            embeb: embedUrl, // changed from embed: embedUrl
+            embeb: embedUrl,
         };
 
-        // Chỉ gọi API nếu có user và token
-        if (user && user.id && token) {
+        if (currentUser && currentUser.id && token) {
             try {
                 await upsertHistory(filmInfo, token);
             } catch (e) {
-                // Có thể log lỗi nếu cần
+                console.error('Error saving film history:', e);
             }
         }
     };
@@ -144,23 +131,26 @@ function FilmInfo({ data }) {
         navigate(`/${ROUTERS.USER.PHIMDM(slug)}`);
     };
 
-    // Load comment khi slug thay đổi
-    useEffect(() => {
-        async function fetchComments() {
-            setCommentLoading(true);
-            setCommentError('');
-            try {
-                const res = await getCommentBySlug(slug);
-                setComments(res.comments || []);
-            } catch (e) {
-                setCommentError('Không thể tải bình luận');
+    const loadComments = async () => {
+        setCommentLoading(true);
+        setCommentError('');
+        try {
+            const res = await getCommentBySlug(slug);
+            if (res && res.status === 'success') {
+                setComments(res.data);
+            } else {
+                setComments([]);
             }
-            setCommentLoading(false);
+        } catch (e) {
+            console.log('Error loading comments:', e);
         }
-        if (slug) fetchComments();
+        setCommentLoading(false);
+    }
+
+    useEffect(() => {
+        if (slug) loadComments();
     }, [slug]);
 
-    // Thêm bình luận mới
     const handleAddComment = async (e) => {
         e.preventDefault();
         if (!commentInput.trim()) return;
@@ -174,21 +164,19 @@ function FilmInfo({ data }) {
                 },
                 token
             );
-            if (res && res.success !== false && !res.error && !res.message) {
+            if (res && res.status === 'success') {
                 setCommentInput('');
-                const reload = await getCommentBySlug(slug);
-                setComments(reload.comments || []);
+                loadComments();
             } else {
-                setCommentError('Đăng nhập để bình luận');
+                setCommentError(res.message || 'Không thể gửi bình luận');
                 setCommentInput('');
             }
         } catch (e) {
-            setCommentError('Không thể gửi bình luận');
+            console.log('error', e);
         }
         setCommentLoading(false);
     };
 
-    // Xóa bình luận
     const handleDeleteComment = (commentId) => {
         setDeleteCommentId(commentId);
         setShowDeleteConfirm(true);
@@ -200,15 +188,13 @@ function FilmInfo({ data }) {
         setCommentLoading(true);
         try {
             const res = await deleteComment(deleteCommentId, token);
-            if (res && res.success !== false) {
-                // Sau khi xóa thành công, reload lại danh sách comment từ server
-                const reload = await getCommentBySlug(slug);
-                setComments(reload.comments || []);
+            if (res && res.status === 'success') {
+                loadComments();
             } else {
-                setCommentError(res.error || 'Không thể xóa bình luận');
+                setCommentError(res.message || 'Không thể xóa bình luận');
             }
         } catch (e) {
-            setCommentError('Không thể xóa bình luận');
+            console.error('Error deleting comment:', e);
         }
         setCommentLoading(false);
         setDeleteCommentId(null);
@@ -246,8 +232,8 @@ function FilmInfo({ data }) {
                                 data-video={episode.embed}
                                 className={
                                     String(selectedEpisodeName) === episode.name &&
-                                    String(selectedServer) === server.server_name &&
-                                    String(selectedEpisode) === episode.embed
+                                        String(selectedServer) === server.server_name &&
+                                        String(selectedEpisode) === episode.embed
                                         ? 'active'
                                         : ''
                                 }
@@ -296,7 +282,7 @@ function FilmInfo({ data }) {
                 </form>
                 {/* Thông báo lỗi sử dụng Message */}
                 {commentError && <Message type="error">{commentError}</Message>}
-                {commentLoading && <div className="comment-loading">Đang xử lý...</div>}
+                {commentLoading && <center><div className="comment-loading">Đang tải bình luận...</div></center>}
                 <div className="comment-list">
                     {comments && comments.length > 0 ? (
                         comments.map((c, idx) => (
@@ -307,14 +293,14 @@ function FilmInfo({ data }) {
                                 time={c.createdAt ? c.createdAt : ''}
                                 comment={c.comment}
                                 onDelete={
-                                    user && (user._id === c.user_id || user._id === c.user?.id || user._id === c.user?._id)
+                                    currentUser && (currentUser._id === c.user_id || currentUser._id === c.currentUser?.id || currentUser._id === c.currentUser?._id)
                                         ? () => handleDeleteComment(c.id)
                                         : undefined
                                 }
                             />
                         ))
                     ) : (
-                        <div className="comment-empty">Chưa có bình luận nào.</div>
+                        !commentLoading && <div className="comment-empty">Chưa có bình luận nào.</div>
                     )}
                 </div>
                 {/* Hiển thị xác nhận xóa bình luận */}

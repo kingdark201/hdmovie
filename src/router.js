@@ -10,6 +10,7 @@ import Setting from "./pages/users/setting";
 import Login from './pages/admin/login';
 import UserAdmin from './pages/admin/users';
 import Register from './pages/admin/register';
+import ManageAdmin from './pages/admin/manage';
 
 const RenderUserRouter = () => {
     const userRouters = [
@@ -47,6 +48,10 @@ const RenderUserRouter = () => {
         {
             path: "/register",
             component: <Register />
+        },
+        {
+            path: "/admin/manage",
+            component: <ManageAdmin />
         }
     ];
 

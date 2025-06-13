@@ -1,4 +1,3 @@
-// Lấy header xác thực từ token truyền vào
 function getAuthHeader(token) {
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
@@ -54,6 +53,23 @@ export async function deleteUser(token) {
     }
 }
 
+export async function deleteUserById(userId, token) {
+    try {
+        const response = await fetch(`https://hdmoviebe.onrender.com/api/users/admin-delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(token),
+            },
+            body: JSON.stringify({ userId }),
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
 export async function getUser(id, token) {
     try {
         const response = await fetch(`https://hdmoviebe.onrender.com/api/users/user/${id}`, {
@@ -87,4 +103,19 @@ export async function login(username, password) {
 
 export async function logout() {
     return { success: true };
+}
+
+export async function getAllUsers(token) {
+    try {
+        const response = await fetch('https://hdmoviebe.onrender.com/api/users/all', {
+            method: 'GET',
+            headers: {
+                ...getAuthHeader(token),
+            },
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
 }

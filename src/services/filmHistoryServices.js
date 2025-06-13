@@ -2,7 +2,6 @@ function getAuthHeader(token) {
     return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// Thêm hoặc cập nhật lịch sử xem phim (theo slug)
 export async function upsertHistory(history, token) {
     try {
         const response = await fetch(`https://hdmoviebe.onrender.com/api/film-history/upsert`, {
@@ -20,7 +19,6 @@ export async function upsertHistory(history, token) {
     }
 }
 
-// Xóa lịch sử theo id
 export async function deleteHistory(slug, token) {
     try {
         const response = await fetch(`https://hdmoviebe.onrender.com/api/film-history/delete/${slug}`, {
@@ -36,7 +34,6 @@ export async function deleteHistory(slug, token) {
     }
 }
 
-// Lấy toàn bộ lịch sử của user
 export async function getHistory(token) {
     try {
         const response = await fetch(`https://hdmoviebe.onrender.com/api/film-history/get`, {

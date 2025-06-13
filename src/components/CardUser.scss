@@ -1,0 +1,41 @@
+.card-user-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #c7c7c741;
+    position: relative;
+}
+
+.card-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 14px;
+    flex-shrink: 0;
+}
+
+.card-user-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-user-username {
+    font-weight: 600;
+    color: var(--film-info-text-color, #fff);
+}
+
+.card-user-created {
+    font-size: 12px;
+    color: #888;
+}
+
+.card-user-delete-btn {
+    background: none;
+    border: none;
+    color: #d00;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+}

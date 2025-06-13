@@ -3,18 +3,19 @@ import './style.scss';
 import CardHistory from '../../../components/CardHistory';
 import { getHistory, deleteHistory } from '../../../services/filmHistoryServices';
 import Message from '../../../components/Message';
+import { useSelector } from 'react-redux';
 
 const History = () => {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [confirmSlug, setConfirmSlug] = useState(null);
-    const token = localStorage.getItem('authToken'); // hoặc nơi bạn lưu token
+    const { token, user: currentUser } = useSelector((state) => state.auth);
 
     useEffect(() => {
         const fetchHistory = async () => {
             setLoading(true);
             const res = await getHistory(token);
-            if (res && Array.isArray(res.data)) {
+            if (res && res.status === 'success' && Array.isArray(res.data)) {
                 setHistory(res.data);
             } else {
                 setHistory([]);
@@ -22,8 +23,6 @@ const History = () => {
             setLoading(false);
         };
         fetchHistory();
-        console.log(history);
-
     }, []);
 
     const handleDeleteHistory = (slug) => {
@@ -32,9 +31,11 @@ const History = () => {
 
     const handleConfirmDelete = async () => {
         if (!confirmSlug) return;
-        await deleteHistory(confirmSlug, token);
-        setHistory(prev => prev.filter(item => item.slug !== confirmSlug));
-        setConfirmSlug(null);
+        const res = await deleteHistory(confirmSlug, token);
+        if (res && res.status === 'success') {
+            setHistory(prev => prev.filter(item => item.slug !== confirmSlug));
+            setConfirmSlug(null);
+        }
     };
 
     const handleCancelDelete = () => {

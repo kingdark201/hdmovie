@@ -16,23 +16,19 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Reset error trước khi submit
+        setError('');
         setSuccess('');
-        if (!username || !password || !enterpassword) {
-            setError('Vui lòng nhập đầy đủ thông tin');
-            return;
-        }
         if (password !== enterpassword) {
             setError('Mật khẩu nhập lại không khớp');
             return;
         }
         const res = await addUser({ username, password });
         
-        if (res && !res.error) {
-            setSuccess('Đăng ký thành công!');
+        if (res && res.status === 'success') {
+            setSuccess(res.message || 'Đăng ký thành công');
             setTimeout(() => navigate('/login'), 1200);
         } else {
-            setError(res.error || 'Đăng ký thất bại');
+            setError(res.message || 'Đăng ký thất bại');
         }
     };
 
@@ -79,7 +75,7 @@ const Register = () => {
                         value={enterpassword}
                         onChange={e => {
                             setEnterpassword(e.target.value);
-                            setError(''); // Reset error khi thay đổi nhập lại mật khẩu
+                            setError(''); 
                         }}
                         required
                     />

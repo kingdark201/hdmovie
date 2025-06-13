@@ -16,12 +16,28 @@
     background: #e6ffed;
     border: 1.5px solid #2ecc40;
     color: #218838;
+    position: fixed;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%);
+    z-index: 1001;
+    min-width: 260px;
+    max-width: 90vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
 }
 
 .message-error {
     background: #ffeaea;
     border: 1.5px solid #e74c3c;
     color: #c0392b;
+    position: fixed;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%);
+    z-index: 1001;
+    min-width: 260px;
+    max-width: 90vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
 }
 
 .message-confirm {
