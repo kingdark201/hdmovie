@@ -101,9 +101,6 @@ function Setting() {
                     </select>
                 </label>
             </div>
-            <button className="btn-history-view" onClick={() => navigate('/history')}>
-                Lịch sử xem phim
-            </button>
             <button className="btn-reset-setting" onClick={handleReset}>
                 Đặt lại mặc định
             </button>
