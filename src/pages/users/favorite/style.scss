@@ -1,0 +1,27 @@
+.favorite-page {
+    padding: 30px 0px;
+    color: var(--body-text-color, #fff);
+    background-color: transparent;
+
+    .favorite-cards {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+
+    p {
+        color: #fff;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .favorite-page {
+        padding: 30px 0;
+        background-color: transparent;
+
+        .favorite-cards {
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 10px;
+        }
+    }
+}

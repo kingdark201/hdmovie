@@ -4,6 +4,7 @@ export const ROUTERS = {
         PHIMDM: (category) => `danh-muc/${category}`,
         PHIM: (name) => `film/${name}`,
         HISTORY: 'history', // Thêm route lịch sử
+        FAVORITE: 'favorite', // Thêm route phim yêu thích
     },
     ADMIN: {
         LOGIN: '/login', // Thêm route đăng nhập admin

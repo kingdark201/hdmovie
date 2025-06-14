@@ -1,15 +1,16 @@
+import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';
-import './style.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import './style.scss';
+import Message from '../Message';
+import ListCard from '../ListCard';
+import CommentItem from '../CommentItem';
 import { ROUTERS } from '../../utils/router';
 import { loadNewFilmsRandom } from '../../utils/core';
-import ListCard from '../ListCard';
-// Thêm import cho commentServices
-import { addComment, getCommentBySlug, deleteComment } from '../../services/commentServices';
-import CommentItem from '../CommentItem';
-import Message from '../Message';
 import { upsertHistory, getHistory } from '../../services/filmHistoryServices';
-import { useSelector } from 'react-redux';
+import { addComment, getCommentBySlug, deleteComment } from '../../services/commentServices';
+import { addFavorite, deleteFavorite, getFavorite } from '../../services/filmFavoriteServices';
 
 function FilmInfo({ data }) {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function FilmInfo({ data }) {
     const [selectedEpisode, setSelectedEpisode] = useState(() => localStorage.getItem('selectedEpisode') || '');
     const [selectedEpisodeName, setSelectedEpisodeName] = useState(() => localStorage.getItem('selectedEpisodeName') || '');
     const [selectedServer, setSelectedServer] = useState(() => localStorage.getItem('selectedServer') || '');
+
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,14 +26,17 @@ function FilmInfo({ data }) {
     const [commentInput, setCommentInput] = useState('');
     const [commentLoading, setCommentLoading] = useState(false);
     const [commentError, setCommentError] = useState('');
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteCommentId, setDeleteCommentId] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [historyLoaded, setHistoryLoaded] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const [favoriteMessage, setFavoriteMessage] = useState('');
+    const [favoriteMessageType, setFavoriteMessageType] = useState('success');
 
     const location = useLocation();
     const pathname = location.pathname;
     const slug = pathname.split('/').pop();
-
     const { token, user: currentUser } = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -205,6 +210,62 @@ function FilmInfo({ data }) {
         setDeleteCommentId(null);
     };
 
+    useEffect(() => {
+        async function checkFavorite() {
+            if (!token || !currentUser || !slug) {
+                setIsFavorite(false);
+                return;
+            }
+            try {
+                const res = await getFavorite(token);
+                if (res && res.status === 'success' && Array.isArray(res.data)) {
+                    setIsFavorite(res.data.some(item => item.slug === slug));
+                } else {
+                    setIsFavorite(false);
+                }
+            } catch (e) {
+                setIsFavorite(false);
+            }
+        }
+        checkFavorite();
+    }, [token, currentUser, slug]);
+
+    const handleToggleFavorite = async (e) => {
+        e.stopPropagation();
+        setFavoriteMessage('');
+        if (!token || !currentUser) return;
+        if (isFavorite) {
+            const res = await deleteFavorite(slug, token);
+            if (res && res.status === 'success') {
+                setIsFavorite(false);
+                setFavoriteMessage(res.message);
+                setFavoriteMessageType('success');
+            } else {
+                setFavoriteMessage(res.message);
+                setFavoriteMessageType('error');
+            }
+        } else {
+            const favorite = {
+                title: data.name,
+                origin_title: data.original_name,
+                thumb: data.thumb_url,
+                current_episode: data.current_episode,
+                total_episodes: data.total_episodes,
+                slug
+            };
+            
+            const res = await addFavorite(favorite, token);
+            if (res && res.status === 'success') {
+                setIsFavorite(true);
+                setFavoriteMessage(res.message);
+                setFavoriteMessageType('success');
+            }else {
+                setFavoriteMessage(res.message);
+                setFavoriteMessageType('error');
+            }
+        }
+    };
+
     if (!data.episodes) return <p className='text-white'>No episodes available.</p>;
 
     return (
@@ -249,7 +310,21 @@ function FilmInfo({ data }) {
                 <img src={data.thumb_url} alt={data.name} />
                 <div className="infomation">
                     <h4>{data.name}</h4>
-                    <p className="original_name_film">{data.original_name}</p>
+                    <div style={{ display: 'flex', alignItems: 'center',  }}>
+                        <p className="original_name_film" style={{ marginBottom: 0 }}>{data.original_name}</p>
+                        <i
+                            className={`bi ${isFavorite ? 'bi-heart-fill' : 'bi-heart'}`}
+                            style={{
+                                marginLeft: 8,
+                                fontSize: 28,
+                                color: 'red',
+                                cursor: 'pointer',
+                                transition: 'color 0.2s'
+                            }}
+                            title={isFavorite ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích'}
+                            onClick={handleToggleFavorite}
+                        ></i>
+                    </div>
                     <div className="details_info">
                         <p className="name_film">{data.name} - {data.original_name}</p>
                         <p className="status_film">Trạng thái: {data.current_episode} {data.language}</p>
@@ -280,7 +355,7 @@ function FilmInfo({ data }) {
                         Gửi
                     </button>
                 </form>
-                {/* Thông báo lỗi sử dụng Message */}
+
                 {commentError && <Message type="error">{commentError}</Message>}
                 {commentLoading && <center><div className="comment-loading">Đang tải bình luận...</div></center>}
                 <div className="comment-list">
@@ -303,7 +378,7 @@ function FilmInfo({ data }) {
                         !commentLoading && <div className="comment-empty">Chưa có bình luận nào.</div>
                     )}
                 </div>
-                {/* Hiển thị xác nhận xóa bình luận */}
+
                 {showDeleteConfirm && (
                     <Message
                         type="confirm"
@@ -314,6 +389,10 @@ function FilmInfo({ data }) {
                     </Message>
                 )}
             </div>
+
+            {favoriteMessage && (
+                <Message type={favoriteMessageType}>{favoriteMessage}</Message>
+            )}
             <div>
                 {loading && <p className="text-center">Đang tải...</p>}
                 <ListCard title={'Phim Gợi Ý'} data={randomFilms} onMore={() => loadMoreFilms('phim-dang-chieu')} />

@@ -62,11 +62,11 @@
   margin-bottom: 2px;
 }
 
-.user-admin-field span{
+.user-admin-field span {
   text-align: center;
 }
 
-.user-admin-created-at{
+.user-admin-created-at {
   font-size: 12px;
   color: #bdbdbd;
 }
@@ -79,14 +79,13 @@
 .user-admin-edit-btn,
 .user-admin-save-btn,
 .user-admin-manage-btn {
-  width: 120px;
+  width: 100%;
   padding: 8px 0px;
   border: none;
   border-radius: 6px;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  margin-right: 10px;
   margin-top: 8px;
   transition: background 0.2s;
 }
@@ -106,72 +105,134 @@
 }
 
 .user-admin-logout-topright {
-    position: absolute;
-    top: 70px;
-    right: 10px;
-    z-index: 10;
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  z-index: 10;
 }
 
 .user-admin-logout-btn {
-    background: transparent;
-    color: var(--body-text-color, #fff);
-    border: none;
-    font-weight: bold;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  background: transparent;
+  color: var(--body-text-color, #fff);
+  border: none;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.user-admin-delete-btn{
+.user-admin-delete-btn {
   background: transparent;
-    color: rgb(165, 18, 18);
-    border: none;
-    font-weight: bold;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  color: rgb(165, 18, 18);
+  border: none;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
 }
 
 .user-admin-delete-topleft {
-    position: absolute;
-    top: 70px;
-    left: 10px;
-    z-index: 10;
+  position: absolute;
+  top: 70px;
+  left: 10px;
+  z-index: 10;
 }
 
 .user-admin-login-btn {
-    background: #027515;
-    padding: 5px 8px;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  background: #027515;
+  padding: 5px 8px;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .user-admin-manage-btn {
-    background: #041646;
-    padding: 5px 8px;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    text-align: center;
+  background: #041646;
+  padding: 5px 8px;
+  width: 100%;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  text-align: center;
+}
+
+.user-admin-tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin-top: 18px 0 10px 0;
+}
+
+.user-admin-tab-btn {
+  background: transparent;
+  color: var(--body-text-color, #fff);
+  border: none;
+  border-bottom: 1px solid #333;
+  width: 150px;
+  padding: 8px 0;
+  margin-top: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+
+.user-admin-tab-btn.active {
+  color: #fff;
+  border-bottom: 2px solid #027515;
+}
+
+.user-admin-tab-content {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: transparent;
+  max-width: 100%;
+}
+
+.user-admin-avatar-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.user-admin-avatar-modal-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5);
+  background: #222;
+  display: block;
+  margin: 0 auto;
 }

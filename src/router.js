@@ -11,6 +11,7 @@ import Login from './pages/admin/login';
 import UserAdmin from './pages/admin/users';
 import Register from './pages/admin/register';
 import ManageAdmin from './pages/admin/manage';
+import FavoritePage from './pages/users/favorite';
 
 const RenderUserRouter = () => {
     const userRouters = [
@@ -33,6 +34,10 @@ const RenderUserRouter = () => {
         {
             path: "setting",
             component: <Setting />
+        },
+        {
+            path: ROUTERS.USER.FAVORITE,
+            component: <FavoritePage />
         }
     ];
 

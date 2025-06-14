@@ -66,7 +66,7 @@ function Header() {
             ]
         },
         { title: 'Cài đặt', onClick: () => setShowSetting(true), slug: 'setting' } ,
-        {title: token && currentUser ? currentUser.username : 'Tài khoản', path: '/admin/users', slug: 'account'}
+        {title: token && currentUser ? currentUser.username : 'Tài khoản', path: '/admin/users', slug: 'account'},
     ];
 
     const toggleMenu = () => setMenuOpen(!isMenuOpen);

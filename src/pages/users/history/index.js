@@ -44,7 +44,6 @@ const History = () => {
 
     return (
         <div className="history-page">
-            <h2 className='title-history'>Lịch sử xem phim</h2>
             {confirmSlug && (
                 <Message
                     type="confirm"

@@ -5,6 +5,8 @@ import { logout } from '../../authSlice';
 import './users.scss';
 import { useNavigate } from 'react-router-dom';
 import Message from '../../components/Message';
+import History from '../users/history';
+import Favorite from '../users/favorite';
 
 const UserAdmin = () => {
     const dispatch = useDispatch();
@@ -19,7 +21,8 @@ const UserAdmin = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [loading, setLoading] = useState(false); // Thêm state loading
-
+    const [activeTab, setActiveTab] = useState('history');
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
 
     const handleGetUser = useCallback(async () => {
         if (!userId || !token) {
@@ -119,6 +122,22 @@ const UserAdmin = () => {
 
     return (
         <div className="user-admin-container">
+            {/* Avatar Modal */}
+            {showAvatarModal && (
+                <div
+                    className="user-admin-avatar-modal"
+                    onClick={() => setShowAvatarModal(false)}
+                >
+                    <img
+                        src={editData.avatar || 'https://via.placeholder.com/400?text=No+Avatar'}
+                        alt="avatar-large"
+                        className="user-admin-avatar-modal-img"
+                        onClick={e => e.stopPropagation()}
+                    />
+                </div>
+            )}
+            {/* End Avatar Modal */}
+
             {loading ? (
                 <div className="user-admin-loading">
                     <center>Đang tải...</center>
@@ -154,12 +173,16 @@ const UserAdmin = () => {
                                         alt="avatar"
                                         className="user-admin-avatar-img animate__animated animate__ZoomIn"
                                         onError={e => { e.target.src = 'https://via.placeholder.com/96?text=No+Avatar'; }}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => setShowAvatarModal(true)}
                                     />
                                 ) : (
                                     <img
                                         src="https://via.placeholder.com/96?text=No+Avatar"
                                         alt="avatar"
                                         className="user-admin-avatar-img"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => setShowAvatarModal(true)}
                                     />
                                 )
                             )}
@@ -188,6 +211,7 @@ const UserAdmin = () => {
                                 />
                             )}
                         </div>
+
                         {isEditing ? (
                             <button onClick={handleSave} className="user-admin-save-btn"><i className="bi bi-clipboard-check"></i> Save</button>
                         ) : (
@@ -197,6 +221,29 @@ const UserAdmin = () => {
                         {user.role && user.role === 'admin' && (
                             <button onClick={() => navigate('/admin/manage')} className="user-admin-manage-btn"><i className="bi bi-person-circle"></i> Manage</button>
                         )}
+
+                        {/* Tabs */}
+                        <div className="user-admin-tabs">
+                            <button
+                                className={`user-admin-tab-btn${activeTab === 'history' ? ' active' : ''}`}
+                                onClick={() => setActiveTab('history')}
+                            >
+                                <i className="bi bi-clock-history"></i> Lịch sử xem
+                            </button>
+                            <button
+                                className={`user-admin-tab-btn${activeTab === 'favorites' ? ' active' : ''}`}
+                                onClick={() => setActiveTab('favorites')}
+                            >
+                                <i className="bi bi-heart"></i> Phim yêu thích
+                            </button>
+                        </div>
+                        <div className="user-admin-tab-content">
+                            {activeTab === 'history' && <History/>}
+                            {activeTab === 'favorites' && <Favorite/>}
+                        </div>
+                        {/* End Tabs */}
+
+                        
                     </div>
                 </>
             ) : (
@@ -223,5 +270,6 @@ const UserAdmin = () => {
         </div>
     );
 };
+
 
 export default UserAdmin;
