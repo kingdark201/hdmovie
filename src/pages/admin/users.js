@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import Message from '../../components/Message';
 import History from '../users/history';
 import Favorite from '../users/favorite';
+import Pictures from '../users/pictures';
+import { addPicture } from '../../services/pictureService';
 
 const UserAdmin = () => {
     const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const UserAdmin = () => {
     const [loading, setLoading] = useState(false); // Thêm state loading
     const [activeTab, setActiveTab] = useState('history');
     const [showAvatarModal, setShowAvatarModal] = useState(false);
+    const [picturesRefreshKey, setPicturesRefreshKey] = useState(0); // Thêm state refresh key cho Pictures
 
     const handleGetUser = useCallback(async () => {
         if (!userId || !token) {
@@ -33,7 +36,7 @@ const UserAdmin = () => {
             setLoading(false);
             return;
         }
-        setLoading(true); // Bắt đầu loading
+        setLoading(true);
         const res = await getUser(userId, token);
         const userObj = res && res.data ? res.data : null;
 
@@ -48,7 +51,7 @@ const UserAdmin = () => {
             setErrorMessage(res.message);
             setSuccessMessage('');
         }
-        setLoading(false); // Kết thúc loading
+        setLoading(false);
     }, [userId, token]);
 
     useEffect(() => {
@@ -83,6 +86,8 @@ const UserAdmin = () => {
         const res = await editUser(editData, token);
         if (res && res.status === 'success') {
             setUser(res.data);
+            await addPicture(editData.avatar, token);
+            setPicturesRefreshKey(prev => prev + 1); // Thông báo Pictures reload
             setSuccessMessage(res.message || 'Cập nhật thành công');
             setIsEditing(false);
         } else {
@@ -120,156 +125,197 @@ const UserAdmin = () => {
         navigate('/login');
     };
 
+    // Thêm hàm cập nhật avatar khi đặt avatar mới từ Pictures
+    const handleAvatarChange = (newAvatarUrl) => {
+        setEditData(prev => ({
+            ...prev,
+            avatar: newAvatarUrl
+        }));
+        setUser(prev => ({
+            ...prev,
+            avatar: newAvatarUrl
+        }));
+    };
+
     return (
-        <div className="user-admin-container">
-            {/* Avatar Modal */}
-            {showAvatarModal && (
-                <div
-                    className="user-admin-avatar-modal"
-                    onClick={() => setShowAvatarModal(false)}
-                >
+        <>
+            {/* Avatar Top Image */}
+            {editData.avatar && (
+                <div className="user-admin-avatar-top">
                     <img
-                        src={editData.avatar || 'https://via.placeholder.com/400?text=No+Avatar'}
-                        alt="avatar-large"
-                        className="user-admin-avatar-modal-img"
-                        onClick={e => e.stopPropagation()}
+                        src={editData.avatar}
+                        alt="avatar-top"
+                        className="user-admin-avatar-top-img"
+                        onError={e => { e.target.src = 'https://via.placeholder.com/60?text=No+Avatar'; }}
                     />
                 </div>
             )}
-            {/* End Avatar Modal */}
+            {/* End Avatar Top Image */}
+            <div className="user-admin-container">
 
-            {loading ? (
-                <div className="user-admin-loading">
-                    <center>Đang tải...</center>
-                </div>
-            ) : token && user ? (
-                <>
-                    <div className="user-admin-delete-topleft">
-                        <button onClick={handleDelete} className="user-admin-delete-btn">
-                            <i className="bi bi-trash"></i>
-                        </button>
-                    </div>
-                    <div className="user-admin-logout-topright">
-                        <button onClick={handleLogout} className="user-admin-logout-btn">
-                            <i className="bi bi-box-arrow-right"></i>
-                        </button>
-                    </div>
 
-                    <div className="user-admin-fields">
-                        <div className="user-admin-avatar">
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    className="user-admin-input"
-                                    placeholder="Avatar URL"
-                                    value={editData.avatar || ''}
-                                    onChange={e => setEditData({ ...editData, avatar: e.target.value })}
-                                    style={{ textAlign: 'center' }}
-                                />
-                            ) : (
-                                editData.avatar ? (
-                                    <img
-                                        src={editData.avatar}
-                                        alt="avatar"
-                                        className="user-admin-avatar-img animate__animated animate__ZoomIn"
-                                        onError={e => { e.target.src = 'https://via.placeholder.com/96?text=No+Avatar'; }}
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => setShowAvatarModal(true)}
+                {/* Avatar Modal */}
+                {showAvatarModal && (
+                    <div
+                        className="user-admin-avatar-modal"
+                        onClick={() => setShowAvatarModal(false)}
+                    >
+                        <img
+                            src={editData.avatar || 'https://via.placeholder.com/400?text=No+Avatar'}
+                            alt="avatar-large"
+                            className="user-admin-avatar-modal-img"
+                            onClick={e => e.stopPropagation()}
+                        />
+                    </div>
+                )}
+                {/* End Avatar Modal */}
+
+                {loading ? (
+                    <div className="user-admin-loading">
+                        <center>Đang tải...</center>
+                    </div>
+                ) : token && user ? (
+                    <>
+                        <div className="user-admin-delete-topleft">
+                            <button onClick={handleDelete} className="user-admin-delete-btn">
+                                <i className="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        <div className="user-admin-logout-topright">
+                            <button onClick={handleLogout} className="user-admin-logout-btn">
+                                <i className="bi bi-box-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <div className="user-admin-fields">
+                            <div className="user-admin-avatar">
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        className="user-admin-input"
+                                        placeholder="Avatar URL"
+                                        value={editData.avatar || ''}
+                                        onChange={e => setEditData({ ...editData, avatar: e.target.value })}
+                                        style={{ textAlign: 'center' }}
                                     />
                                 ) : (
-                                    <img
-                                        src="https://via.placeholder.com/96?text=No+Avatar"
-                                        alt="avatar"
-                                        className="user-admin-avatar-img"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => setShowAvatarModal(true)}
+                                    editData.avatar ? (
+                                        <img
+                                            src={editData.avatar}
+                                            alt="avatar"
+                                            className="user-admin-avatar-img animate__animated animate__ZoomIn"
+                                            onError={e => { e.target.src = 'https://via.placeholder.com/96?text=No+Avatar'; }}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setShowAvatarModal(true)}
+                                        />
+                                    ) : (
+                                        <img
+                                            src="https://via.placeholder.com/96?text=No+Avatar"
+                                            alt="avatar"
+                                            className="user-admin-avatar-img"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setShowAvatarModal(true)}
+                                        />
+                                    )
+                                )}
+                            </div>
+                            <h1 className="user-admin-username">{editData.username}</h1>
+                            <p className="user-admin-created-at">
+                                {editData.createdAt ? new Date(editData.createdAt).toLocaleDateString() : 'Chưa có ngày tạo'}
+                            </p>
+                            <div className="user-admin-field">
+                                {isEditing && (
+                                    <input
+                                        value={editData.username || ''}
+                                        onChange={e => setEditData({ ...editData, username: e.target.value })}
+                                        className="user-admin-input"
                                     />
-                                )
+                                )}
+                            </div>
+                            <div className="user-admin-field">
+                                {isEditing && (
+                                    <input
+                                        type="password"
+                                        value={editData.password || ''}
+                                        onChange={e => setEditData({ ...editData, password: e.target.value })}
+                                        className="user-admin-input"
+                                        placeholder="Nhập mật khẩu mới"
+                                    />
+                                )}
+                            </div>
+
+                            {isEditing ? (
+                                <button onClick={handleSave} className="user-admin-save-btn"><i className="bi bi-clipboard-check"></i> Save</button>
+                            ) : (
+                                <button onClick={handleEdit} className="user-admin-edit-btn"><i className="bi bi-pencil-square"></i> Edit</button>
                             )}
-                        </div>
-                        <h1 className="user-admin-username">{editData.username}</h1>
-                        <p className="user-admin-created-at">
-                            {editData.createdAt ? new Date(editData.createdAt).toLocaleDateString() : 'Chưa có ngày tạo'}
-                        </p>
-                        <div className="user-admin-field">
-                            {isEditing && (
-                                <input
-                                    value={editData.username || ''}
-                                    onChange={e => setEditData({ ...editData, username: e.target.value })}
-                                    className="user-admin-input"
-                                />
+
+                            {user.role && user.role === 'admin' && (
+                                <button onClick={() => navigate('/admin/manage')} className="user-admin-manage-btn"><i className="bi bi-person-circle"></i> Manage</button>
                             )}
-                        </div>
-                        <div className="user-admin-field">
-                            {isEditing && (
-                                <input
-                                    type="password"
-                                    value={editData.password || ''}
-                                    onChange={e => setEditData({ ...editData, password: e.target.value })}
-                                    className="user-admin-input"
-                                    placeholder="Nhập mật khẩu mới"
-                                />
-                            )}
-                        </div>
 
-                        {isEditing ? (
-                            <button onClick={handleSave} className="user-admin-save-btn"><i className="bi bi-clipboard-check"></i> Save</button>
-                        ) : (
-                            <button onClick={handleEdit} className="user-admin-edit-btn"><i className="bi bi-pencil-square"></i> Edit</button>
-                        )}
+                            {/* Tabs */}
+                            <div className="user-admin-tabs">
+                                <button
+                                    className={`user-admin-tab-btn${activeTab === 'history' ? ' active' : ''}`}
+                                    onClick={() => setActiveTab('history')}
+                                >
+                                    <i className="bi bi-clock-history"></i> History
+                                </button>
+                                <button
+                                    className={`user-admin-tab-btn${activeTab === 'favorites' ? ' active' : ''}`}
+                                    onClick={() => setActiveTab('favorites')}
+                                >
+                                    <i className="bi bi-heart"></i> Favorite
+                                </button>
+                                <button
+                                    className={`user-admin-tab-btn${activeTab === 'pictures' ? ' active' : ''}`}
+                                    onClick={() => setActiveTab('pictures')}
+                                >
+                                    <i className="bi bi-images"></i> Pictures
+                                </button>
+                            </div>
+                            <div className="user-admin-tab-content">
+                                {activeTab === 'history' && <History />}
+                                {activeTab === 'favorites' && <Favorite />}
+                                {activeTab === 'pictures' && (
+                                    <Pictures
+                                        refreshKey={picturesRefreshKey}
+                                        onAvatarChange={handleAvatarChange}
+                                    />
+                                )}
+                            </div>
+                            {/* End Tabs */}
 
-                        {user.role && user.role === 'admin' && (
-                            <button onClick={() => navigate('/admin/manage')} className="user-admin-manage-btn"><i className="bi bi-person-circle"></i> Manage</button>
-                        )}
 
-                        {/* Tabs */}
-                        <div className="user-admin-tabs">
-                            <button
-                                className={`user-admin-tab-btn${activeTab === 'history' ? ' active' : ''}`}
-                                onClick={() => setActiveTab('history')}
-                            >
-                                <i className="bi bi-clock-history"></i> Lịch sử xem
-                            </button>
-                            <button
-                                className={`user-admin-tab-btn${activeTab === 'favorites' ? ' active' : ''}`}
-                                onClick={() => setActiveTab('favorites')}
-                            >
-                                <i className="bi bi-heart"></i> Phim yêu thích
-                            </button>
                         </div>
-                        <div className="user-admin-tab-content">
-                            {activeTab === 'history' && <History/>}
-                            {activeTab === 'favorites' && <Favorite/>}
-                        </div>
-                        {/* End Tabs */}
-
-                        
+                    </>
+                ) : (
+                    <div className="user-admin-login-prompt">
+                        <center>
+                            <p>Bạn cần đăng nhập để quản lý tài khoản.</p>
+                            <button onClick={() => navigate('/login')} className="user-admin-login-btn">Đăng nhập</button>
+                        </center>
                     </div>
-                </>
-            ) : (
-                <div className="user-admin-login-prompt">
-                    <center>
-                        <p>Bạn cần đăng nhập để quản lý tài khoản.</p>
-                        <button onClick={() => navigate('/login')} className="user-admin-login-btn">Đăng nhập</button>
-                    </center>
-                </div>
-            )}
+                )}
 
-            {errorMessage && <Message type="error">{errorMessage}</Message>}
-            {successMessage && <Message type="success">{successMessage}</Message>}
+                {errorMessage && <Message type="error">{errorMessage}</Message>}
+                {successMessage && <Message type="success">{successMessage}</Message>}
 
-            {showDeleteConfirm && (
-                <Message
-                    type="confirm"
-                    onConfirm={confirmDelete}
-                    onCancel={cancelDelete}
-                >
-                    Bạn muốn xóa "{currentUser.username}"?
-                </Message>
-            )}
-        </div>
+                {showDeleteConfirm && (
+                    <Message
+                        type="confirm"
+                        onConfirm={confirmDelete}
+                        onCancel={cancelDelete}
+                    >
+                        Bạn muốn xóa "{currentUser.username}"?
+                    </Message>
+                )}
+            </div>
+        </>
     );
 };
 
 
 export default UserAdmin;
+

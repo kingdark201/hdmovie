@@ -1,0 +1,78 @@
+.pictures-page {
+    margin-top: 30px;
+
+    .pictures-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+    }
+    .picture-item {
+        width: 170px;
+        cursor: pointer;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+    
+        img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+    }
+    .picture-modal {
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .picture-modal-content {
+            background: transparent;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 90vw;
+            max-height: 90vh;
+            img {
+                max-width: 100%;
+                max-height: 60vh;
+                border-radius: 8px;
+                margin-bottom: 16px;
+                object-fit: cover;
+            }
+            .picture-modal-actions {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                button {
+                    background: var(--button-color, #fff);
+                    color: var(--button-text-color, #000);
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    i {
+                        margin-right: 4px;
+                    }
+                    &:hover {
+                        opacity: 0.85;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .pictures-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 14px !important;
+    }
+    .picture-item {
+        width: 165px;
+    }
+}
