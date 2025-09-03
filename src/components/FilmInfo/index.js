@@ -132,6 +132,9 @@ function FilmInfo({ data }) {
         }
     };
 
+    console.log('FilmInfo data:', data);
+    
+
     const loadMoreFilms = (slug) => {
         navigate(`/${ROUTERS.USER.PHIMDM(slug)}`);
     };
@@ -278,6 +281,8 @@ function FilmInfo({ data }) {
                     height="500px"
                     frameBorder="0"
                     allowFullScreen
+                    loading="lazy"
+                    sandbox='allow-same-origin allow-scripts allow-popups allow-forms'
                 ></iframe>
                 <h4 className="text-white mb-4 namefilm-episode">
                     {data.name} {selectedEpisodeName ? `- Tập ${selectedEpisodeName}` : ''}
@@ -290,7 +295,7 @@ function FilmInfo({ data }) {
                         {server.items.map((episode) => (
                             <button
                                 key={episode.name}
-                                data-video={episode.embed}
+                                data-video={episode.embed} //thêm 1 m3u8
                                 className={
                                     String(selectedEpisodeName) === episode.name &&
                                         String(selectedServer) === server.server_name &&

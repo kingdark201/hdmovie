@@ -56,12 +56,17 @@ function Setting() {
 
     const handleReset = () => {
         setSettings(defaultSettings);
-        localStorage.removeItem('siteSettings');
+        localStorage.clear();
+        l
     };
+
+    const handleRedirect = () => {
+        window.location.href="/tool.html";
+    }
 
     return (
         <div className="setting-page animate__animated animate__slideInRight">
-            <h2>Cài đặt giao diện</h2>
+            <h2>Cài đặt giao <span onClick={handleRedirect}>diện</span></h2>
             <div className="setting-group animate__animated animate__fadeIn">
                 <label>Màu Header: <input type="color" name="headerColor" value={settings.headerColor} onChange={handleChange} /></label>
                 <label>Màu chữ Header: <input type="color" name="headerTextColor" value={settings.headerTextColor} onChange={handleChange} /></label>
