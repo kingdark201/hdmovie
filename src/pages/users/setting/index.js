@@ -57,7 +57,6 @@ function Setting() {
     const handleReset = () => {
         setSettings(defaultSettings);
         localStorage.clear();
-        l
     };
 
     const handleRedirect = () => {
