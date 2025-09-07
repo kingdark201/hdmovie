@@ -6,6 +6,7 @@ import { ROUTERS } from '../../../utils/router';
 import Slider from '../../../components/Slider';
 import ListCard from '../../../components/ListCard';
 import { useSelector } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
 
 function HomePage() {
     const [films, setFilms] = useState([]);
