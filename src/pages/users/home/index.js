@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTERS } from '../../../utils/router';
 import Slider from '../../../components/Slider';
 import ListCard from '../../../components/ListCard';
+import { useSelector } from 'react-redux';
 
 function HomePage() {
     const [films, setFilms] = useState([]);
@@ -14,6 +15,19 @@ function HomePage() {
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { token, user: currentUser } = useSelector((state) => state.auth);
+    const { exp } = jwtDecode(token);
+    const expirationTime = exp * 1000 - Date.now();
+
+    setTimeout(() => {
+        logout();
+    }, expirationTime);
+
+    function logout() {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUser");
+        navigate(ROUTERS.ADMIN.LOGIN);
+    }
 
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
