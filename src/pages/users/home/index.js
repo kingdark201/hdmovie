@@ -27,6 +27,8 @@ function HomePage() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
         navigate(ROUTERS.ADMIN.LOGIN);
+        console.log("logouted");
+        
     }
 
     useEffect(() => {
