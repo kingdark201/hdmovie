@@ -35,7 +35,7 @@ function HomePage() {
 
     useEffect (()=>{
         if(!token & !user){
-            navigate("login");
+            navigate("/login");
         }
     },[token, user])
 
