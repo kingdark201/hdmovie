@@ -22,6 +22,7 @@ function HomePage() {
 
     setTimeout(() => {
         logout();
+        navigate("/login");
     }, expirationTime);
 
     function logout() {
@@ -58,3 +59,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
