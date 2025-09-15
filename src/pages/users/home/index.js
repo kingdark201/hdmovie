@@ -33,6 +33,12 @@ function HomePage() {
         
     }
 
+    useEffect (()=>{
+        if(!token & !user){
+            navigate("login");
+        }
+    },[token, user])
+
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
         loadNewFilms(1, setFilms);
