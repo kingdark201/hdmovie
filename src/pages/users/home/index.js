@@ -22,14 +22,12 @@ function HomePage() {
 
     setTimeout(() => {
         logout();
-        navigate("/login");
     }, expirationTime);
 
     function logout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
         console.log("logouted");
-        
     }
 
     useEffect (()=>{
