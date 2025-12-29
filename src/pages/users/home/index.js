@@ -24,17 +24,36 @@ function HomePage() {
         logout();
     }, expirationTime);
 
-    function logout() {
+    const logout = () => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
-        console.log("logouted");
-    }
+        window.location.href = "/login";
+    };
 
-    useEffect (()=>{
-        if(!token & !user){
+    useEffect(() => {
+        if (!token || !currentUser) {
             navigate("/login");
+            return;
         }
-    },[token, user])
+
+        try {
+            const { exp } = jwtDecode(token);
+            const expirationTime = exp * 1000 - Date.now();
+
+            if (expirationTime <= 0) {
+                logout();
+            } else {
+                const timer = setTimeout(() => {
+                    logout();
+                }, expirationTime);
+                
+                return () => clearTimeout(timer);
+            }
+        } catch (error) {
+            console.error("Token không hợp lệ");
+            logout();
+        }
+    }, [token, currentUser, navigate]);
 
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
