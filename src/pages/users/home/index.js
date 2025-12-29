@@ -6,7 +6,6 @@ import { ROUTERS } from '../../../utils/router';
 import Slider from '../../../components/Slider';
 import ListCard from '../../../components/ListCard';
 import { useSelector } from 'react-redux';
-import { jwtDecode } from 'jwt-decode';
 
 function HomePage() {
     const [films, setFilms] = useState([]);
@@ -16,34 +15,6 @@ function HomePage() {
     const [randomFilms, setRandomFilms] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const { token, user: currentUser } = useSelector((state) => state.auth);
-    const { exp } = jwtDecode(token);
-    const expirationTime = exp * 1000 - Date.now();
-
-    const logout = () => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("authUser");
-        navigate("/login");
-    };
-
-    useEffect(() => {
-        if (!token || !currentUser) {
-            navigate("/login");
-            return;
-        }
-
-       try {
-            const decoded = jwtDecode(token);
-            const expirationTime = decoded.exp * 1000 - Date.now();
-            const timer = setTimeout(() => {
-                logout();
-            }, expirationTime);
-            return () => clearTimeout(timer);
-        } catch (error) {
-            console.error("Token không hợp lệ:", error);
-            logout();
-        }
-    }, [token, currentUser, navigate]);
 
     useEffect(() => {
         loadNewFilmsRandom(setRandomFilms, setLoading);
