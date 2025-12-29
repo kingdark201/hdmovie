@@ -28,7 +28,6 @@ function HomePage() {
     function logout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
-        navigate(ROUTERS.ADMIN.LOGIN);
         console.log("logouted");
         
     }
