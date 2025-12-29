@@ -20,14 +20,10 @@ function HomePage() {
     const { exp } = jwtDecode(token);
     const expirationTime = exp * 1000 - Date.now();
 
-    setTimeout(() => {
-        logout();
-    }, expirationTime);
-
     const logout = () => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
-        window.location.href = "/login";
+        navigate("/login");
     };
 
     useEffect(() => {
@@ -36,21 +32,15 @@ function HomePage() {
             return;
         }
 
-        try {
-            const { exp } = jwtDecode(token);
-            const expirationTime = exp * 1000 - Date.now();
-
-            if (expirationTime <= 0) {
+       try {
+            const decoded = jwtDecode(token);
+            const expirationTime = decoded.exp * 1000 - Date.now();
+            const timer = setTimeout(() => {
                 logout();
-            } else {
-                const timer = setTimeout(() => {
-                    logout();
-                }, expirationTime);
-                
-                return () => clearTimeout(timer);
-            }
+            }, expirationTime);
+            return () => clearTimeout(timer);
         } catch (error) {
-            console.error("Token không hợp lệ");
+            console.error("Token không hợp lệ:", error);
             logout();
         }
     }, [token, currentUser, navigate]);
